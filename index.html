@@ -338,16 +338,17 @@
 
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
-
-    // Inline Service Worker for PWA / App Installation
+// Register Service Worker for PWA Installation
     if ('serviceWorker' in navigator) {
-        const swCode = `
-            self.addEventListener('install', e => e.waitUntil(caches.open('pwa-cache').then(c => c.add('./'))));
-            self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('Service Worker Registered'))
+                .catch(err => console.log('Registration Failed', err));
+        });
     }
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
