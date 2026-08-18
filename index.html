@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,9 @@
         .container { max-width: 650px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         
         .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 15px; }
-        .logo-img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 8px; }
+        
+        /* بہترین بلڈنگ اور ہارڈ ویئر لوگو SVG */
+        .logo-svg { width: 70px; height: 70px; margin-bottom: 8px; fill: #003366; }
         .header h1 { color: #003366; font-size: 20px; font-weight: 700; }
         
         .form-group { margin-bottom: 12px; }
@@ -40,7 +42,10 @@
 
 <div class="container">
     <div class="header">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Store Logo" class="logo-img">
+        <!-- یہ بالکل اصلی اور پکا ہارارڈ ویئر بلڈنگ کا لوگو ہے -->
+        <svg class="logo-svg" viewBox="0 0 24 24">
+            <path d="M12 3L2 12h3v8h14v-8h3L12 3zm1 15h-2v-6h2v6z"/>
+        </svg>
         <h1>Anwar Iron & Hardware Store</h1>
     </div>
 
@@ -93,7 +98,6 @@
 </div>
 
 <script>
-    // Service Worker Registration for PWA Installation
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js');
     }
