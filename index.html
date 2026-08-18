@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anwar Iron and Hardware Store</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; }
-        body { background: #f3f4f6; padding: 10px; color: #1f2937; }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 0; }
+        body { background: #f3f4f6; padding: 15px; color: #1f2937; direction: ltr; }
         
         .bill-card { max-width: 450px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
@@ -23,13 +23,13 @@
         
         /* TABLE STYLING */
         .bill-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .bill-table th { text-align: right; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
+        .bill-table th { text-align: left; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
         .bill-table th:nth-child(2) { text-align: center; }
-        .bill-table th:nth-child(3) { text-align: left; }
+        .bill-table th:nth-child(3) { text-align: right; }
         
         .bill-table td { font-size: 12px; color: #1f2937; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
         .bill-table td:nth-child(2) { text-align: center; }
-        .bill-table td:nth-child(3) { text-align: left; }
+        .bill-table td:nth-child(3) { text-align: right; }
         
         /* TOTALS */
         .totals-container { margin-top: 10px; font-size: 12px; color: #374151; }
@@ -86,7 +86,7 @@
             <div>Bill #<span id="billNo">1001</span></div>
             <div>Customer: <span id="dispCust">--</span></div>
         </div>
-        <div style="text-align: left;">
+        <div style="text-align: right;">
             <div id="billDate"></div>
         </div>
     </div>
@@ -95,9 +95,9 @@
     <table class="bill-table">
         <thead>
             <tr>
-                <th>آئٹم کا نام</th>
-                <th>تعداد / یونٹ</th>
-                <th>قیمت</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
                 <th class="no-print" style="width:15px;"></th>
             </tr>
         </thead>
@@ -107,15 +107,15 @@
     <!-- TOTALS -->
     <div class="totals-container">
         <div class="total-row">
-            <span>سب ٹوٹل:</span>
+            <span>Subtotal</span>
             <span>Rs <span id="subTotal">0</span></span>
         </div>
         <div class="total-row">
-            <span>ڈسکاؤنٹ:</span>
+            <span>Discount</span>
             <span>-Rs <span id="dispDiscount">0</span></span>
         </div>
         <div class="grand-total-row">
-            <span>ٹوٹل رقم:</span>
+            <span>Total amount</span>
             <span>Rs <span id="grandTotal">0</span></span>
         </div>
     </div>
@@ -125,23 +125,23 @@
     <!-- INPUT FORM -->
     <div class="input-section no-print">
         <div class="form-group">
-            <label>کسٹمر کا نام</label>
+            <label>Customer Name</label>
             <input type="text" id="custName" placeholder="Customer Name" oninput="updateCust()">
         </div>
         <div class="form-group">
-            <label>آئٹم کا نام</label>
-            <input type="text" id="itemName" placeholder="e.g. Bala / Phakar popular">
+            <label>Item Name</label>
+            <input type="text" id="itemName" placeholder="e.g. ball 6ft 2/2.25">
         </div>
         
         <!-- QTY + UNIT DROPDOWN ROW -->
         <div class="form-group">
-            <label>تعداد اور یونٹ (Unit)</label>
+            <label>Quantity & Unit</label>
             <div class="qty-unit-row">
-                <input type="number" id="itemQty" step="0.01" placeholder="تعداد (Qty)">
+                <input type="number" id="itemQty" step="0.01" placeholder="Qty">
                 <select id="itemUnit">
+                    <option value="Pcs">Pcs</option>
                     <option value="Feet">Feet</option>
                     <option value="KG">KG</option>
-                    <option value="Pcs">Pcs</option>
                     <option value="Meter">Meter</option>
                     <option value="Bundle">Bundle</option>
                     <option value="Length">Length</option>
@@ -150,14 +150,14 @@
         </div>
 
         <div class="form-group">
-            <label>فی ریٹ (Rate Rs)</label>
+            <label>Rate (Rs)</label>
             <input type="number" id="itemRate" step="0.01" placeholder="Rate">
         </div>
 
-        <button class="btn-add" onclick="addItem()">+ Add Item (آئٹم شامل کریں)</button>
+        <button class="btn-add" onclick="addItem()">+ Add Item</button>
 
         <div class="form-group" style="margin-top: 10px;">
-            <label>ڈسکاؤنٹ (Rs)</label>
+            <label>Discount Amount (Rs)</label>
             <input type="number" id="discountInput" value="0" oninput="updateDiscount()">
         </div>
 
@@ -179,20 +179,27 @@
     }
 
     function addItem() {
-        const name = document.getElementById('itemName').value.trim();
-        const qty = parseFloat(document.getElementById('itemQty').value) || 0;
+        const nameEl = document.getElementById('itemName');
+        const qtyEl = document.getElementById('itemQty');
+        const rateEl = document.getElementById('itemRate');
+        
+        const name = nameEl.value.trim();
+        const qty = parseFloat(qtyEl.value) || 0;
         const unit = document.getElementById('itemUnit').value;
-        const rate = parseFloat(document.getElementById('itemRate').value) || 0;
+        const rate = parseFloat(rateEl.value) || 0;
 
         if (!name || qty <= 0 || rate <= 0) {
-            alert('برائے مہربانی آئٹم، تعداد اور ریٹ کا اندراج کریں');
+            alert('Please enter Item Name, Quantity and Rate');
             return;
         }
 
         items.push({ name, qty, unit, rate, amount: qty * rate });
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemQty').value = '';
-        document.getElementById('itemRate').value = '';
+        
+        // AUTO CLEAR INPUT FIELDS AFTER ADDING
+        nameEl.value = '';
+        qtyEl.value = '';
+        rateEl.value = '';
+        nameEl.focus(); // Focus back to item name for quick next entry
         
         render();
     }
@@ -242,7 +249,7 @@
         const total = document.getElementById('grandTotal').innerText;
 
         if (items.length === 0) {
-            alert('پہلے بل میں آئٹم شامل کریں!');
+            alert('Please add items to the bill first!');
             return;
         }
 
