@@ -1,58 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" class="notranslate" translate="no">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
     <title>Anwar Iron and Hardware Store</title>
+    
+    <!-- PWA Manifest Inline Data -->
+    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFud2FyIElyb24gU3RvcmUiLAogICJzaG9ydF9uYW1lIjogIkFud2FyIFN0b3JlIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjd2hpdGUiLAogICJ0aGVtZV9jb2xvciI6ICIjMTExODI3Igp9">
+    
+    <!-- html2canvas Library for Image/PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <style>
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 0; }
-        body { background: #f3f4f6; padding: 15px; color: #1f2937; direction: ltr; }
+        * { 
+            box-sizing: border-box; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            direction: ltr !important;
+            text-align: left !important;
+        }
+        
+        body { background: #f3f4f6; padding: 15px; color: #1f2937; direction: ltr !important; }
         
         .bill-card { max-width: 450px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
-        /* HEADER & ORIGINAL LOGO */
-        .header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+        /* HEADER & LOGO */
+        .header { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: 10px; margin-bottom: 8px; justify-content: flex-start !important; }
         .logo-svg { width: 32px; height: 32px; flex-shrink: 0; margin-top: 2px; }
-        .store-info h1 { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.2; }
-        .store-info p { font-size: 11px; color: #6b7280; margin-top: 2px; }
+        .store-info h1 { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.2; text-align: left !important; }
+        .store-info p { font-size: 11px; color: #6b7280; margin-top: 2px; text-align: left !important; }
         
         .divider { border-bottom: 1.5px solid #111827; margin: 8px 0 10px 0; }
         
         /* META DETAILS */
-        .bill-meta { display: flex; justify-content: space-between; font-size: 12px; color: #374151; margin-bottom: 12px; font-weight: 500; }
+        .bill-meta { display: flex !important; justify-content: space-between !important; font-size: 12px; color: #374151; margin-bottom: 12px; font-weight: 500; }
         
         /* TABLE STYLING */
         .bill-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .bill-table th { text-align: left; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
-        .bill-table th:nth-child(2) { text-align: center; }
-        .bill-table th:nth-child(3) { text-align: right; }
+        .bill-table th { text-align: left !important; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
+        .bill-table th:nth-child(2) { text-align: center !important; }
+        .bill-table th:nth-child(3) { text-align: right !important; }
         
         .bill-table td { font-size: 12px; color: #1f2937; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
-        .bill-table td:nth-child(2) { text-align: center; }
-        .bill-table td:nth-child(3) { text-align: right; }
+        .bill-table td:nth-child(1) { text-align: left !important; }
+        .bill-table td:nth-child(2) { text-align: center !important; }
+        .bill-table td:nth-child(3) { text-align: right !important; }
         
         /* TOTALS */
         .totals-container { margin-top: 10px; font-size: 12px; color: #374151; }
-        .total-row { display: flex; justify-content: space-between; padding: 2px 0; }
-        .grand-total-row { display: flex; justify-content: space-between; margin-top: 6px; font-size: 15px; font-weight: 700; color: #d97706; }
+        .total-row { display: flex !important; justify-content: space-between !important; padding: 2px 0; }
+        .grand-total-row { display: flex !important; justify-content: space-between !important; margin-top: 6px; font-size: 15px; font-weight: 700; color: #d97706; }
         
-        .thank-you { text-align: center; font-size: 11px; color: #6b7280; margin-top: 20px; }
+        .thank-you { text-align: center !important; font-size: 11px; color: #6b7280; margin-top: 20px; }
         
-        /* INPUT FORM (HIDDEN ON PRINT) */
+        /* INPUT FORM */
         .input-section { background: #f9fafb; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb; margin-top: 15px; }
-        .form-group { margin-bottom: 8px; }
-        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 2px; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: #fff; }
+        .form-group { margin-bottom: 8px; text-align: left !important; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 2px; text-align: left !important; }
+        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: #fff; text-align: left !important; direction: ltr !important; }
         
-        .qty-unit-row { display: flex; gap: 6px; }
+        .qty-unit-row { display: flex !important; flex-direction: row !important; gap: 6px; }
         .qty-unit-row input { flex: 2; }
         .qty-unit-row select { flex: 1.5; }
 
         /* BUTTONS */
-        .btn-add { background: #111827; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; margin-top: 6px; }
-        .action-buttons { display: flex; gap: 8px; margin-top: 12px; }
-        .btn-share { background: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; }
-        .btn-print { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; }
+        .btn-add { background: #111827; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; margin-top: 6px; text-align: center !important; }
+        .action-buttons { display: flex !important; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .btn-row { display: flex !important; gap: 8px; }
+        .btn-share-img { background: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
+        .btn-share-txt { background: #059669; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
+        .btn-print { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
         .btn-del { color: #ef4444; border: none; background: none; cursor: pointer; font-weight: bold; }
 
         @media print {
@@ -62,10 +81,10 @@
         }
     </style>
 </head>
-<body>
+<body class="notranslate">
 
-<div class="bill-card">
-    <!-- ORIGINAL LOGO & HEADER -->
+<div class="bill-card" id="printableArea">
+    <!-- HEADER -->
     <div class="header">
         <svg class="logo-svg" viewBox="0 0 100 100">
             <polyline points="20,60 50,30 80,60" fill="none" stroke="#d97706" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -86,7 +105,7 @@
             <div>Bill #<span id="billNo">1001</span></div>
             <div>Customer: <span id="dispCust">--</span></div>
         </div>
-        <div style="text-align: right;">
+        <div style="text-align: right !important;">
             <div id="billDate"></div>
         </div>
     </div>
@@ -133,7 +152,7 @@
             <input type="text" id="itemName" placeholder="e.g. ball 6ft 2/2.25">
         </div>
         
-        <!-- QTY + UNIT DROPDOWN ROW -->
+        <!-- QTY + UNIT DROPDOWN -->
         <div class="form-group">
             <label>Quantity & Unit</label>
             <div class="qty-unit-row">
@@ -162,8 +181,11 @@
         </div>
 
         <div class="action-buttons">
-            <button class="btn-share" onclick="shareToWhatsApp()">🟢 WhatsApp</button>
-            <button class="btn-print" onclick="window.print()">📄 Save PDF</button>
+            <button class="btn-share-img" onclick="shareBillImage()">📲 Share Bill (Image/PDF)</button>
+            <div class="btn-row">
+                <button class="btn-share-txt" onclick="shareToWhatsAppText()">💬 Text Only</button>
+                <button class="btn-print" onclick="window.print()">📄 Save PDF</button>
+            </div>
         </div>
     </div>
 </div>
@@ -195,13 +217,16 @@
 
         items.push({ name, qty, unit, rate, amount: qty * rate });
         
-        // AUTO CLEAR INPUT FIELDS AFTER ADDING
+        // AUTO CLEAR FIELDS IMMEDIATELY
         nameEl.value = '';
         qtyEl.value = '';
         rateEl.value = '';
-        nameEl.focus(); // Focus back to item name for quick next entry
         
         render();
+
+        setTimeout(() => {
+            nameEl.focus();
+        }, 50);
     }
 
     function removeItem(idx) {
@@ -242,7 +267,52 @@
         document.getElementById('grandTotal').innerText = finalTotal.toLocaleString();
     }
 
-    function shareToWhatsApp() {
+    // SHARE AS IMAGE / PDF (DIRECT TO WHATSAPP)
+    async function shareBillImage() {
+        if (items.length === 0) {
+            alert('Please add items to the bill first!');
+            return;
+        }
+
+        const inputSection = document.querySelector('.input-section');
+        const delButtons = document.querySelectorAll('.btn-del');
+        
+        // Hide inputs before capturing image
+        inputSection.style.display = 'none';
+        delButtons.forEach(b => b.style.display = 'none');
+
+        try {
+            const card = document.getElementById('printableArea');
+            const canvas = await html2canvas(card, { scale: 2 });
+            
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], `Bill_${Date.now()}.png`, { type: 'image/png' });
+                
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Bill Receipt',
+                        text: 'Bill from Anwar Iron and Hardware Store'
+                    });
+                } else {
+                    // Fallback download if direct share not supported
+                    const link = document.createElement('a');
+                    link.download = `Bill_${Date.now()}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                    alert('Bill image downloaded to your device!');
+                }
+            }, 'image/png');
+        } catch (err) {
+            alert('Could not generate bill image.');
+        } finally {
+            inputSection.style.display = 'block';
+            delButtons.forEach(b => b.style.display = 'inline-block');
+        }
+    }
+
+    // SHARE AS TEXT ONLY
+    function shareToWhatsAppText() {
         const cust = document.getElementById('dispCust').innerText;
         const billNo = document.getElementById('billNo').innerText;
         const date = document.getElementById('billDate').innerText;
@@ -267,6 +337,16 @@
         msg += `\n*Total Amount:* Rs ${total}\n--------------------------------\n*Thank you!*`;
 
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // Inline Service Worker for PWA / App Installation
+    if ('serviceWorker' in navigator) {
+        const swCode = `
+            self.addEventListener('install', e => e.waitUntil(caches.open('pwa-cache').then(c => c.add('./'))));
+            self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
+        `;
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
     }
 </script>
 </body>
