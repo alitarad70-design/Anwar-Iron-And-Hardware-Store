@@ -1,176 +1,258 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anwar Iron & Hardware Store</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#003366">
+    <title>Anwar Iron and Hardware Store</title>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 0; }
-        body { background: #f0f4f8; padding: 15px; color: #333; }
-        .container { max-width: 650px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 0; }
+        body { background: #f3f4f6; padding: 10px; color: #1f2937; }
         
-        .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 15px; }
+        .bill-card { max-width: 450px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         
-        /* EXACT ORIGINAL BLUE & GOLDEN ARCHITECTURE LOGO */
-        .logo-box {
-            width: 70px;
-            height: 70px;
-            background-color: #0b3c5d;
-            border-radius: 50%;
-            margin: 0 auto 10px auto;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .roof-icon {
-            width: 32px;
-            height: 32px;
-            border-top: 5px solid #ffffff;
-            border-left: 5px solid #ffffff;
-            transform: rotate(45deg);
-            margin-top: 10px;
-        }
-        .gold-ring {
-            width: 22px;
-            height: 22px;
-            border: 3px solid #d4af37;
-            border-radius: 50%;
-            position: absolute;
-            top: 15px;
-            right: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .gold-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #d4af37;
-            border-radius: 50%;
-        }
+        /* HEADER & ORIGINAL LOGO */
+        .header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+        .logo-svg { width: 32px; height: 32px; flex-shrink: 0; margin-top: 2px; }
+        .store-info h1 { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.2; }
+        .store-info p { font-size: 11px; color: #6b7280; margin-top: 2px; }
+        
+        .divider { border-bottom: 1.5px solid #111827; margin: 8px 0 10px 0; }
+        
+        /* META DETAILS */
+        .bill-meta { display: flex; justify-content: space-between; font-size: 12px; color: #374151; margin-bottom: 12px; font-weight: 500; }
+        
+        /* TABLE STYLING */
+        .bill-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+        .bill-table th { text-align: left; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
+        .bill-table th:nth-child(2) { text-align: center; }
+        .bill-table th:nth-child(3) { text-align: right; }
+        
+        .bill-table td { font-size: 12px; color: #1f2937; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
+        .bill-table td:nth-child(2) { text-align: center; }
+        .bill-table td:nth-child(3) { text-align: right; }
+        
+        /* TOTALS */
+        .totals-container { margin-top: 10px; font-size: 12px; color: #374151; }
+        .total-row { display: flex; justify-content: space-between; padding: 2px 0; }
+        .grand-total-row { display: flex; justify-content: space-between; margin-top: 6px; font-size: 15px; font-weight: 700; color: #d97706; }
+        
+        .thank-you { text-align: center; font-size: 11px; color: #6b7280; margin-top: 20px; }
+        
+        /* INPUT FORM (HIDDEN ON PRINT) */
+        .input-section { background: #f9fafb; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb; margin-top: 15px; }
+        .form-group { margin-bottom: 8px; }
+        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 2px; }
+        .form-group input { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; }
+        .form-row { display: flex; gap: 8px; }
+        .form-row div { flex: 1; }
+        
+        /* BUTTONS */
+        .btn-add { background: #111827; color: white; border: none; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; margin-top: 4px; }
+        .action-buttons { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-share { background: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; }
+        .btn-print { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; }
+        .btn-del { color: #ef4444; border: none; background: none; cursor: pointer; font-weight: bold; }
 
-        .header h1 { color: #003366; font-size: 20px; font-weight: 700; margin-top: 5px; }
-        .header p { font-size: 12px; color: #666; }
-        
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
-        .row { display: flex; gap: 8px; }
-        .row div { flex: 1; }
-        
-        .btn-add { background: #003366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 8px; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 13px; }
-        th { background: #f4f6f9; color: #003366; }
-        
-        .totals { margin-top: 15px; text-align: right; }
-        .totals p { font-size: 14px; font-weight: 600; margin: 4px 0; }
-        .grand-total { font-size: 18px; color: #d9534f; font-weight: bold; }
-        
-        .btn-print { background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 15px; }
-        
-        @media print { .no-print { display: none; } .container { box-shadow: none; width: 100%; max-width: 100%; } }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .bill-card { box-shadow: none; padding: 0; max-width: 100%; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="bill-card">
+    <!-- ORIGINAL LOGO & HEADER -->
     <div class="header">
-        <!-- Built-in Original Logo Code -->
-        <div class="logo-box">
-            <div class="roof-icon"></div>
-            <div class="gold-ring">
-                <div class="gold-dot"></div>
-            </div>
+        <svg class="logo-svg" viewBox="0 0 100 100">
+            <polyline points="20,60 50,30 80,60" fill="none" stroke="#d97706" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="68" cy="40" r="12" fill="none" stroke="#d97706" stroke-width="4"/>
+            <circle cx="68" cy="40" r="4" fill="#d97706"/>
+        </svg>
+        <div class="store-info">
+            <h1>Anwar Iron and Hardware Store</h1>
+            <p>Main Ajnala Road, Bhalwal</p>
         </div>
-        <h1>Anwar Iron & Hardware Store</h1>
-        <p>Custom Billing & Invoice System</p>
     </div>
 
-    <div class="no-print">
-        <div class="form-group">
-            <label>Customer Name</label>
-            <input type="text" id="custName" placeholder="Enter customer name">
+    <div class="divider"></div>
+
+    <!-- META -->
+    <div class="bill-meta">
+        <div>
+            <div>Bill #<span id="billNo">1001</span></div>
+            <div>Customer: <span id="dispCust">--</span></div>
         </div>
-        <div class="form-group">
-            <label>Item Name</label>
-            <input type="text" id="itemName" placeholder="e.g. Iron Pipe / Steel Bar">
+        <div style="text-align: right;">
+            <div id="billDate"></div>
         </div>
-        <div class="row">
-            <div>
-                <label>Unit</label>
-                <select id="unitType">
-                    <option value="Pcs">Pcs</option>
-                    <option value="KG">KG</option>
-                    <option value="Feet">Feet</option>
-                </select>
-            </div>
-            <div>
-                <label>Qty / Weight</label>
-                <input type="number" id="itemQty" step="0.01" placeholder="0">
-            </div>
-            <div>
-                <label>Rate (PKR)</label>
-                <input type="number" id="itemRate" step="0.01" placeholder="0">
-            </div>
-        </div>
-        <button class="btn-add" onclick="addItem()">+ Add to Bill</button>
     </div>
 
-    <table>
+    <!-- BILL ITEMS TABLE -->
+    <table class="bill-table">
         <thead>
-            <tr><th>Item</th><th>Unit</th><th>Qty</th><th>Rate</th><th>Total (PKR)</th><th class="no-print">Action</th></tr>
+            <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Amount</th>
+                <th class="no-print" style="width:15px;"></th>
+            </tr>
         </thead>
         <tbody id="billBody"></tbody>
     </table>
 
-    <div class="totals">
-        <p>Subtotal: PKR <span id="subTotal">0.00</span></p>
-        <div class="no-print" style="margin: 5px 0;">
-            <label style="font-size: 12px;">Discount (PKR):</label>
-            <input type="number" id="discount" value="0" oninput="calculateTotals()">
+    <!-- TOTALS -->
+    <div class="totals-container">
+        <div class="total-row">
+            <span>Subtotal</span>
+            <span>Rs <span id="subTotal">0</span></span>
         </div>
-        <p class="grand-total">Grand Total: PKR <span id="grandTotal">0.00</span></p>
+        <div class="total-row">
+            <span>Discount</span>
+            <span>-Rs <span id="dispDiscount">0</span></span>
+        </div>
+        <div class="grand-total-row">
+            <span>Total</span>
+            <span>Rs <span id="grandTotal">0</span></span>
+        </div>
     </div>
-    <button class="btn-print no-print" onclick="window.print()">Print / Save PDF</button>
+
+    <div class="thank-you">Thank you</div>
+
+    <!-- INPUT FORM (HIDDEN ON PRINT) -->
+    <div class="input-section no-print">
+        <div class="form-group">
+            <label>Customer Name</label>
+            <input type="text" id="custName" placeholder="Customer Name" oninput="updateCust()">
+        </div>
+        <div class="form-group">
+            <label>Item Name</label>
+            <input type="text" id="itemName" placeholder="e.g. Phakar popular">
+        </div>
+        <div class="form-row">
+            <div>
+                <label>Qty</label>
+                <input type="number" id="itemQty" step="0.01" placeholder="0">
+            </div>
+            <div>
+                <label>Rate (Rs)</label>
+                <input type="number" id="itemRate" step="0.01" placeholder="0">
+            </div>
+        </div>
+        <button class="btn-add" onclick="addItem()">+ Add Item</button>
+
+        <div class="form-group" style="margin-top: 8px;">
+            <label>Discount Amount (Rs)</label>
+            <input type="number" id="discountInput" value="0" oninput="updateDiscount()">
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-share" onclick="shareToWhatsApp()">🟢 WhatsApp</button>
+            <button class="btn-print" onclick="downloadPDF()">📄 Save PDF</button>
+        </div>
+    </div>
 </div>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js');
+    // Set Current Date
+    document.getElementById('billDate').innerText = new Date().toISOString().split('T')[0];
+
+    let items = [];
+
+    function updateCust() {
+        const val = document.getElementById('custName').value.trim();
+        document.getElementById('dispCust').innerText = val ? val : '--';
     }
 
-    let billItems = [];
     function addItem() {
-        const name = document.getElementById('itemName').value;
-        const unit = document.getElementById('unitType').value;
+        const name = document.getElementById('itemName').value.trim();
         const qty = parseFloat(document.getElementById('itemQty').value) || 0;
         const rate = parseFloat(document.getElementById('itemRate').value) || 0;
-        if (!name || qty <= 0 || rate <= 0) { alert('Enter valid data'); return; }
-        billItems.push({ name, unit, qty, rate, total: qty * rate });
-        renderBill();
+
+        if (!name || qty <= 0 || rate <= 0) {
+            alert('برائے مہربانی صحیح آئٹم، تعداد اور ریٹ لکھیں');
+            return;
+        }
+
+        items.push({ name, qty, rate, amount: qty * rate });
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemQty').value = '';
+        document.getElementById('itemRate').value = '';
+        
+        render();
     }
-    function removeItem(i) { billItems.splice(i, 1); renderBill(); }
-    function renderBill() {
+
+    function removeItem(idx) {
+        items.splice(idx, 1);
+        render();
+    }
+
+    function updateDiscount() {
+        const disc = parseFloat(document.getElementById('discountInput').value) || 0;
+        document.getElementById('dispDiscount').innerText = disc.toLocaleString();
+        calculateTotals();
+    }
+
+    function render() {
         const tbody = document.getElementById('billBody');
         tbody.innerHTML = '';
         let subtotal = 0;
-        billItems.forEach((item, i) => {
-            subtotal += item.total;
-            tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.unit}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.total.toFixed(2)}</td><td class="no-print"><button onclick="removeItem(${i})" style="background:#d9534f;color:#fff;border:none;padding:2px 6px;border-radius:3px;cursor:pointer;">X</button></td></tr>`;
+
+        items.forEach((item, index) => {
+            subtotal += item.amount;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>Rs ${item.amount.toLocaleString()}</td>
+                    <td class="no-print"><button class="btn-del" onclick="removeItem(${index})">×</button></td>
+                </tr>
+            `;
         });
-        document.getElementById('subTotal').innerText = subtotal.toFixed(2);
+
+        document.getElementById('subTotal').innerText = subtotal.toLocaleString();
         calculateTotals();
     }
+
     function calculateTotals() {
-        const subtotal = parseFloat(document.getElementById('subTotal').innerText) || 0;
-        const discount = parseFloat(document.getElementById('discount').value) || 0;
-        document.getElementById('grandTotal').innerText = Math.max(0, subtotal - discount).toFixed(2);
+        const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
+        const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+        const finalTotal = Math.max(0, subtotal - discount);
+        document.getElementById('grandTotal').innerText = finalTotal.toLocaleString();
+    }
+
+    // DOWNLOAD PDF FOR MOBILE
+    function downloadPDF() {
+        window.print();
+    }
+
+    // SHARE TO WHATSAPP
+    function shareToWhatsApp() {
+        const cust = document.getElementById('dispCust').innerText;
+        const billNo = document.getElementById('billNo').innerText;
+        const date = document.getElementById('billDate').innerText;
+        const total = document.getElementById('grandTotal').innerText;
+
+        if (items.length === 0) {
+            alert('پہلے بل میں آئٹم شامل کریں!');
+            return;
+        }
+
+        let msg = `*Anwar Iron and Hardware Store*\nMain Ajnala Road, Bhalwal\n--------------------------------\n`;
+        msg += `*Bill #:* ${billNo}\n*Customer:* ${cust}\n*Date:* ${date}\n--------------------------------\n`;
+        
+        items.forEach(item => {
+            msg += `• *${item.name}* (${item.qty}) = Rs ${item.amount}\n`;
+        });
+
+        const disc = document.getElementById('dispDiscount').innerText;
+        if(disc !== '0') {
+            msg += `\n*Discount:* -Rs ${disc}`;
+        }
+        msg += `\n*Total Amount:* Rs ${total}\n--------------------------------\n*Thank you!*`;
+
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
 </script>
 </body>
