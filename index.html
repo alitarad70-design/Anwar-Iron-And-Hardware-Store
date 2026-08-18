@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anwar Iron & Hardware Store</title>
+    <!-- انسٹالیشن کے لیے یہ لنک بہت ضروری ہے -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#003366">
     <style>
@@ -11,7 +12,6 @@
         body { background: #f0f4f8; padding: 15px; color: #333; }
         .container { max-width: 650px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         
-        /* STORE LOGO HEADER */
         .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 15px; }
         .logo-img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 8px; }
         .header h1 { color: #003366; font-size: 20px; font-weight: 700; }
@@ -34,20 +34,15 @@
         
         .btn-print { background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 15px; }
         
-        @media print {
-            .no-print { display: none; }
-            .container { box-shadow: none; width: 100%; max-width: 100%; }
-        }
+        @media print { .no-print { display: none; } .container { box-shadow: none; width: 100%; max-width: 100%; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <!-- Clean Professional Hardware Logo -->
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Store Logo" class="logo-img">
         <h1>Anwar Iron & Hardware Store</h1>
-        <p style="font-size: 12px; color: #666;">Custom Billing & Invoice System</p>
     </div>
 
     <div class="no-print">
@@ -55,27 +50,26 @@
             <label>Customer Name</label>
             <input type="text" id="custName" placeholder="Enter customer name">
         </div>
-        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
         <div class="form-group">
             <label>Item Name</label>
-            <input type="text" id="itemName" placeholder="e.g. Iron Pipe / Steel Bar">
+            <input type="text" id="itemName" placeholder="e.g. Iron Pipe">
         </div>
         <div class="row">
             <div>
-                <label>Unit Type</label>
+                <label>Unit</label>
                 <select id="unitType">
-                    <option value="Pcs">Per Piece (Pcs)</option>
-                    <option value="KG">Per KG (kg)</option>
-                    <option value="Feet">Per Feet (ft)</option>
+                    <option value="Pcs">Pcs</option>
+                    <option value="KG">KG</option>
+                    <option value="Feet">Feet</option>
                 </select>
             </div>
             <div>
-                <label>Qty / Weight / Length</label>
-                <input type="number" id="itemQty" step="0.01" placeholder="e.g. 2.5">
+                <label>Qty</label>
+                <input type="number" id="itemQty" step="0.01" placeholder="0">
             </div>
             <div>
-                <label>Rate (PKR)</label>
-                <input type="number" id="itemRate" step="0.01" placeholder="e.g. 500">
+                <label>Rate</label>
+                <input type="number" id="itemRate" step="0.01" placeholder="0">
             </div>
         </div>
         <button class="btn-add" onclick="addItem()">+ Add to Bill</button>
@@ -83,89 +77,50 @@
 
     <table>
         <thead>
-            <tr>
-                <th>Item</th>
-                <th>Unit</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Total (PKR)</th>
-                <th class="no-print">Action</th>
-            </tr>
+            <tr><th>Item</th><th>Unit</th><th>Qty</th><th>Rate</th><th>Total</th><th class="no-print">X</th></tr>
         </thead>
         <tbody id="billBody"></tbody>
     </table>
 
     <div class="totals">
         <p>Subtotal: PKR <span id="subTotal">0.00</span></p>
-        <div class="no-print" style="display: inline-block; width: 140px; margin: 5px 0;">
+        <div class="no-print" style="margin: 5px 0;">
             <label style="font-size: 12px;">Discount (PKR):</label>
             <input type="number" id="discount" value="0" oninput="calculateTotals()">
         </div>
         <p class="grand-total">Grand Total: PKR <span id="grandTotal">0.00</span></p>
     </div>
-
-    <button class="btn-print no-print" onclick="window.print()">Print / Save as PDF</button>
+    <button class="btn-print no-print" onclick="window.print()">Print / Save PDF</button>
 </div>
 
 <script>
     let billItems = [];
-
     function addItem() {
         const name = document.getElementById('itemName').value;
         const unit = document.getElementById('unitType').value;
         const qty = parseFloat(document.getElementById('itemQty').value) || 0;
         const rate = parseFloat(document.getElementById('itemRate').value) || 0;
-
-        if (!name || qty <= 0 || rate <= 0) {
-            alert('Please enter valid Item Name, Quantity, and Rate.');
-            return;
-        }
-
-        const total = qty * rate;
-        billItems.push({ name, unit, qty, rate, total });
-
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemQty').value = '';
-        document.getElementById('itemRate').value = '';
-
+        if (!name || qty <= 0 || rate <= 0) { alert('Enter valid data'); return; }
+        billItems.push({ name, unit, qty, rate, total: qty * rate });
         renderBill();
     }
-
-    function removeItem(index) {
-        billItems.splice(index, 1);
-        renderBill();
-    }
-
+    function removeItem(i) { billItems.splice(i, 1); renderBill(); }
     function renderBill() {
         const tbody = document.getElementById('billBody');
         tbody.innerHTML = '';
         let subtotal = 0;
-
-        billItems.forEach((item, index) => {
+        billItems.forEach((item, i) => {
             subtotal += item.total;
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.unit}</td>
-                    <td>${item.qty}</td>
-                    <td>${item.rate}</td>
-                    <td>${item.total.toFixed(2)}</td>
-                    <td class="no-print"><button onclick="removeItem(${index})" style="background:#d9534f; color:white; border:none; padding:3px 7px; border-radius:3px; cursor:pointer;">X</button></td>
-                </tr>
-            `;
+            tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.unit}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.total.toFixed(2)}</td><td class="no-print"><button onclick="removeItem(${i})">X</button></td></tr>`;
         });
-
         document.getElementById('subTotal').innerText = subtotal.toFixed(2);
         calculateTotals();
     }
-
     function calculateTotals() {
         const subtotal = parseFloat(document.getElementById('subTotal').innerText) || 0;
         const discount = parseFloat(document.getElementById('discount').value) || 0;
-        const grandTotal = Math.max(0, subtotal - discount);
-        document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+        document.getElementById('grandTotal').innerText = Math.max(0, subtotal - discount).toFixed(2);
     }
 </script>
-
 </body>
 </html>
