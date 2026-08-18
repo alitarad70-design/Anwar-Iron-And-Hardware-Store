@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anwar Iron & Hardware Store</title>
-    <!-- انسٹالیشن کے لیے یہ لنک بہت ضروری ہے -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#003366">
     <style>
@@ -94,6 +93,11 @@
 </div>
 
 <script>
+    // Service Worker Registration for PWA Installation
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js');
+    }
+
     let billItems = [];
     function addItem() {
         const name = document.getElementById('itemName').value;
