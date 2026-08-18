@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ur">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,9 +13,48 @@
         
         .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 15px; }
         
-        /* بہترین بلڈنگ اور ہارڈ ویئر لوگو SVG */
-        .logo-svg { width: 70px; height: 70px; margin-bottom: 8px; fill: #003366; }
-        .header h1 { color: #003366; font-size: 20px; font-weight: 700; }
+        /* EXACT ORIGINAL BLUE & GOLDEN ARCHITECTURE LOGO */
+        .logo-box {
+            width: 70px;
+            height: 70px;
+            background-color: #0b3c5d;
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .roof-icon {
+            width: 32px;
+            height: 32px;
+            border-top: 5px solid #ffffff;
+            border-left: 5px solid #ffffff;
+            transform: rotate(45deg);
+            margin-top: 10px;
+        }
+        .gold-ring {
+            width: 22px;
+            height: 22px;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            position: absolute;
+            top: 15px;
+            right: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gold-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #d4af37;
+            border-radius: 50%;
+        }
+
+        .header h1 { color: #003366; font-size: 20px; font-weight: 700; margin-top: 5px; }
+        .header p { font-size: 12px; color: #666; }
         
         .form-group { margin-bottom: 12px; }
         label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
@@ -42,11 +81,15 @@
 
 <div class="container">
     <div class="header">
-        <!-- یہ بالکل اصلی اور پکا ہارارڈ ویئر بلڈنگ کا لوگو ہے -->
-        <svg class="logo-svg" viewBox="0 0 24 24">
-            <path d="M12 3L2 12h3v8h14v-8h3L12 3zm1 15h-2v-6h2v6z"/>
-        </svg>
+        <!-- Built-in Original Logo Code -->
+        <div class="logo-box">
+            <div class="roof-icon"></div>
+            <div class="gold-ring">
+                <div class="gold-dot"></div>
+            </div>
+        </div>
         <h1>Anwar Iron & Hardware Store</h1>
+        <p>Custom Billing & Invoice System</p>
     </div>
 
     <div class="no-print">
@@ -56,7 +99,7 @@
         </div>
         <div class="form-group">
             <label>Item Name</label>
-            <input type="text" id="itemName" placeholder="e.g. Iron Pipe">
+            <input type="text" id="itemName" placeholder="e.g. Iron Pipe / Steel Bar">
         </div>
         <div class="row">
             <div>
@@ -68,11 +111,11 @@
                 </select>
             </div>
             <div>
-                <label>Qty</label>
+                <label>Qty / Weight</label>
                 <input type="number" id="itemQty" step="0.01" placeholder="0">
             </div>
             <div>
-                <label>Rate</label>
+                <label>Rate (PKR)</label>
                 <input type="number" id="itemRate" step="0.01" placeholder="0">
             </div>
         </div>
@@ -81,7 +124,7 @@
 
     <table>
         <thead>
-            <tr><th>Item</th><th>Unit</th><th>Qty</th><th>Rate</th><th>Total</th><th class="no-print">X</th></tr>
+            <tr><th>Item</th><th>Unit</th><th>Qty</th><th>Rate</th><th>Total (PKR)</th><th class="no-print">Action</th></tr>
         </thead>
         <tbody id="billBody"></tbody>
     </table>
@@ -119,7 +162,7 @@
         let subtotal = 0;
         billItems.forEach((item, i) => {
             subtotal += item.total;
-            tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.unit}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.total.toFixed(2)}</td><td class="no-print"><button onclick="removeItem(${i})">X</button></td></tr>`;
+            tbody.innerHTML += `<tr><td>${item.name}</td><td>${item.unit}</td><td>${item.qty}</td><td>${item.rate}</td><td>${item.total.toFixed(2)}</td><td class="no-print"><button onclick="removeItem(${i})" style="background:#d9534f;color:#fff;border:none;padding:2px 6px;border-radius:3px;cursor:pointer;">X</button></td></tr>`;
         });
         document.getElementById('subTotal').innerText = subtotal.toFixed(2);
         calculateTotals();
