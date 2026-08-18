@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
+    <meta name="theme-color" content="#111827">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Anwar Iron and Hardware Store</title>
     
-    <!-- PWA Manifest Inline Data -->
-    <link rel="manifest" href="data:application/manifest+json;base64,ewogICJuYW1lIjogIkFud2FyIElyb24gU3RvcmUiLAogICJzaG9ydF9uYW1lIjogIkFud2FyIFN0b3JlIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjd2hpdGUiLAogICJ0aGVtZV9jb2xvciI6ICIjMTExODI3Igp9">
-    
-    <!-- html2canvas Library for Image/PDF Generation -->
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFud2FyIElyb24gYW5kIEhhcmR3YXJlIFN0b3JlIiwKICAic2hvcnRfbmFtZSI6ICJBbndhciBTdG9yZSIsCiAgInN0YXJ0X3VybCI6ICIuL2luZGV4Lmh0bWwiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmM2Y0ZjYiLAogICJ0aGVtZV9jb2xvciI6ICIjMTExODI3IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMzE0NC8zMTQ0NDU2LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgotICAgIH0KICBdCn0=">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
@@ -72,6 +75,7 @@
         .btn-share-img { background: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
         .btn-share-txt { background: #059669; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
         .btn-print { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
+        .btn-install { background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; display: none; text-align: center !important; }
         .btn-del { color: #ef4444; border: none; background: none; cursor: pointer; font-weight: bold; }
 
         @media print {
@@ -143,7 +147,9 @@
 
     <!-- INPUT FORM -->
     <div class="input-section no-print">
-        <div class="form-group">
+        <button id="installBtn" class="btn-install" onclick="installApp()">📲 Install App on Phone</button>
+        
+        <div class="form-group" style="margin-top: 8px;">
             <label>Customer Name</label>
             <input type="text" id="custName" placeholder="Customer Name" oninput="updateCust()">
         </div>
@@ -194,6 +200,36 @@
     document.getElementById('billDate').innerText = new Date().toISOString().split('T')[0];
 
     let items = [];
+    let deferredPrompt;
+
+    // REGISTER SERVICE WORKER
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then(reg => console.log('SW Ready'))
+                .catch(err => console.log('SW Error', err));
+        });
+    }
+
+    // PWA INSTALL PROMPT HANDLER
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const btn = document.getElementById('installBtn');
+        if(btn) btn.style.display = 'block';
+    });
+
+    function installApp() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    document.getElementById('installBtn').style.display = 'none';
+                }
+                deferredPrompt = null;
+            });
+        }
+    }
 
     function updateCust() {
         const val = document.getElementById('custName').value.trim();
@@ -217,7 +253,6 @@
 
         items.push({ name, qty, unit, rate, amount: qty * rate });
         
-        // AUTO CLEAR FIELDS IMMEDIATELY
         nameEl.value = '';
         qtyEl.value = '';
         rateEl.value = '';
@@ -267,7 +302,6 @@
         document.getElementById('grandTotal').innerText = finalTotal.toLocaleString();
     }
 
-    // SHARE AS IMAGE / PDF (DIRECT TO WHATSAPP)
     async function shareBillImage() {
         if (items.length === 0) {
             alert('Please add items to the bill first!');
@@ -277,7 +311,6 @@
         const inputSection = document.querySelector('.input-section');
         const delButtons = document.querySelectorAll('.btn-del');
         
-        // Hide inputs before capturing image
         inputSection.style.display = 'none';
         delButtons.forEach(b => b.style.display = 'none');
 
@@ -295,12 +328,11 @@
                         text: 'Bill from Anwar Iron and Hardware Store'
                     });
                 } else {
-                    // Fallback download if direct share not supported
                     const link = document.createElement('a');
                     link.download = `Bill_${Date.now()}.png`;
                     link.href = canvas.toDataURL();
                     link.click();
-                    alert('Bill image downloaded to your device!');
+                    alert('Bill image downloaded!');
                 }
             }, 'image/png');
         } catch (err) {
@@ -311,7 +343,6 @@
         }
     }
 
-    // SHARE AS TEXT ONLY
     function shareToWhatsAppText() {
         const cust = document.getElementById('dispCust').innerText;
         const billNo = document.getElementById('billNo').innerText;
@@ -338,17 +369,6 @@
 
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
     }
-// Register Service Worker for PWA Installation
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker Registered'))
-                .catch(err => console.log('Registration Failed', err));
-        });
-    }
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
