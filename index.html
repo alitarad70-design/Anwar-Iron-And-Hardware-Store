@@ -4,60 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anwar Iron & Hardware Store</title>
-    <link rel="manifest" href="manifest.json">
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; margin: 0; padding: 0; }
         body { background: #f0f4f8; padding: 15px; color: #333; }
-        .container { max-width: 650px; margin: auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .container { max-width: 650px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         
-        /* Store Logo & Header Styling */
-        .header { display: flex; align-items: center; justify-content: center; gap: 12px; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 20px; }
-        .logo-icon { width: 42px; height: 42px; background: #003366; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #f4b41a; font-weight: bold; font-size: 22px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-        .header-text h1 { color: #003366; font-size: 20px; font-weight: 700; }
-        .header-text p { font-size: 12px; color: #666; }
+        /* HEADER LOGO SECTION */
+        .header { text-align: center; border-bottom: 2px solid #003366; padding-bottom: 12px; margin-bottom: 15px; }
+        
+        /* EXACT ORIGINAL LOGO DESIGN */
+        .original-logo {
+            width: 65px;
+            height: 65px;
+            background-color: #0d47a1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            position: relative;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        .roof-shape {
+            width: 32px;
+            height: 32px;
+            border-top: 5px solid #ffffff;
+            border-left: 5px solid #ffffff;
+            transform: rotate(45deg);
+            margin-top: 10px;
+        }
+        .golden-circle {
+            width: 22px;
+            height: 22px;
+            border: 3px solid #d4af37;
+            border-radius: 50%;
+            position: absolute;
+            top: 14px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .golden-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #d4af37;
+            border-radius: 50%;
+        }
 
+        .header h1 { color: #003366; font-size: 20px; font-weight: 700; }
+        
         .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; color: #444; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; outline: none; }
-        input:focus, select:focus { border-color: #003366; }
+        label { display: block; font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; }
         .row { display: flex; gap: 8px; }
         .row div { flex: 1; }
         
-        .btn-add { background: #003366; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 5px; transition: 0.2s; }
-        .btn-add:hover { background: #002244; }
+        .btn-add { background: #003366; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; margin-top: 8px; }
         
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; font-size: 13px; }
-        th { background: #f8fafc; color: #003366; font-weight: bold; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 13px; }
+        th { background: #f4f6f9; color: #003366; }
         
         .totals { margin-top: 15px; text-align: right; }
         .totals p { font-size: 14px; font-weight: 600; margin: 4px 0; }
         .grand-total { font-size: 18px; color: #d9534f; font-weight: bold; }
         
-        .btn-print { background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 15px; }
+        .btn-print { background: #28a745; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-size: 15px; font-weight: bold; width: 100%; margin-top: 15px; }
         
         @media print {
-            body { background: white; padding: 0; }
             .no-print { display: none; }
-            .container { box-shadow: none; border: none; width: 100%; max-width: 100%; }
+            .container { box-shadow: none; width: 100%; max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Logo & Header -->
     <div class="header">
-        <div class="logo-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4"/><path d="M2 7h20"/></svg>
+        <!-- EXACT ORIGINAL LOGO -->
+        <div class="original-logo">
+            <div class="roof-shape"></div>
+            <div class="golden-circle">
+                <div class="golden-dot"></div>
+            </div>
         </div>
-        <div class="header-text">
-            <h1>Anwar Iron & Hardware Store</h1>
-            <p>Smart Billing & Invoice Management</p>
-        </div>
+        
+        <h1>Anwar Iron & Hardware Store</h1>
+        <p style="font-size: 12px; color: #666;">Custom Billing & Invoice System</p>
     </div>
 
-    <!-- Add Item Form -->
     <div class="no-print">
         <div class="form-group">
             <label>Customer Name</label>
@@ -66,19 +102,19 @@
         <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
         <div class="form-group">
             <label>Item Name</label>
-            <input type="text" id="itemName" placeholder="e.g. Steel Pipe / Sheet">
+            <input type="text" id="itemName" placeholder="e.g. Iron Pipe / Steel Bar">
         </div>
         <div class="row">
             <div>
                 <label>Unit Type</label>
                 <select id="unitType">
-                    <option value="Pcs">Piece (Pcs)</option>
-                    <option value="KG">Kilogram (KG)</option>
-                    <option value="Feet">Feet (Ft)</option>
+                    <option value="Pcs">Per Piece (Pcs)</option>
+                    <option value="KG">Per KG (kg)</option>
+                    <option value="Feet">Per Feet (ft)</option>
                 </select>
             </div>
             <div>
-                <label>Qty / Weight</label>
+                <label>Qty / Weight / Length</label>
                 <input type="number" id="itemQty" step="0.01" placeholder="e.g. 2.5">
             </div>
             <div>
@@ -89,7 +125,6 @@
         <button class="btn-add" onclick="addItem()">+ Add to Bill</button>
     </div>
 
-    <!-- Invoice Table -->
     <table>
         <thead>
             <tr>
@@ -101,12 +136,9 @@
                 <th class="no-print">Action</th>
             </tr>
         </thead>
-        <tbody id="billBody">
-            <!-- Dynamic Items -->
-        </tbody>
+        <tbody id="billBody"></tbody>
     </table>
 
-    <!-- Totals -->
     <div class="totals">
         <p>Subtotal: PKR <span id="subTotal">0.00</span></p>
         <div class="no-print" style="display: inline-block; width: 140px; margin: 5px 0;">
@@ -116,7 +148,7 @@
         <p class="grand-total">Grand Total: PKR <span id="grandTotal">0.00</span></p>
     </div>
 
-    <button class="btn-print no-print" onclick="window.print()">Print / Save PDF</button>
+    <button class="btn-print no-print" onclick="window.print()">Print / Save as PDF</button>
 </div>
 
 <script>
@@ -162,7 +194,7 @@
                     <td>${item.qty}</td>
                     <td>${item.rate}</td>
                     <td>${item.total.toFixed(2)}</td>
-                    <td class="no-print"><button onclick="removeItem(${index})" style="background:#d9534f; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">X</button></td>
+                    <td class="no-print"><button onclick="removeItem(${index})" style="background:#d9534f; color:white; border:none; padding:3px 7px; border-radius:3px; cursor:pointer;">X</button></td>
                 </tr>
             `;
         });
