@@ -1,112 +1,137 @@
 <!DOCTYPE html>
 <html lang="ur" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anwar Iron Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        body { background-color: #1e293b; color: white; font-family: sans-serif; }
-        .bill-card { background-color: white; color: black; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anwar Iron Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
-<body class="p-4">
+<body class="bg-slate-900 text-white p-4 font-sans">
 
-<div class="max-w-md mx-auto bill-card p-6 rounded-lg shadow-lg" id="bill">
-    <h2 class="text-2xl font-bold text-center text-orange-600 mb-4">ANWAR IRON STORE</h2>
-    
-    <!-- Inputs -->
-    <div class="space-y-2 mb-6">
-        <input type="text" id="cust-name" placeholder="Customer Name" class="w-full p-2 border rounded">
-        <input type="text" id="cust-phone" placeholder="WhatsApp Number" class="w-full p-2 border rounded">
-        <hr>
-        <input type="text" id="item-name" placeholder="Item Name" class="w-full p-2 border rounded">
-        <div class="grid grid-cols-3 gap-2">
-            <input type="number" id="item-qty" placeholder="Qty" class="p-2 border rounded">
-            <input type="text" id="item-unit" placeholder="Unit" class="p-2 border rounded">
-            <input type="number" id="item-rate" placeholder="Rate" class="p-2 border rounded">
-        </div>
-        <button onclick="addItem()" class="w-full bg-orange-600 text-white p-2 rounded font-bold">Add Item</button>
+  <div class="max-w-md mx-auto space-y-4">
+    <h2 class="text-xl font-bold text-amber-500 text-center">ANWAR IRON STORE</h2>
+
+    <!-- Customer Inputs -->
+    <div class="space-y-2">
+      <input type="text" id="cust-name" placeholder="Customer Name" class="w-full p-2 bg-slate-800 border border-slate-700 rounded text-white">
+      <input type="tel" id="cust-phone" placeholder="WhatsApp number (03xx...)" class="w-full p-2 bg-slate-800 border border-slate-700 rounded text-white">
     </div>
 
-    <!-- Bill Table -->
-    <table class="w-full text-sm border-collapse mb-4">
+    <!-- Item Inputs (Qty & Unit Included) -->
+    <div class="space-y-2">
+      <input type="text" id="item-name" placeholder="Item Name" class="w-full p-2 bg-slate-800 border border-slate-700 rounded text-white">
+      <div class="grid grid-cols-3 gap-2">
+        <input type="number" id="item-qty" placeholder="Qty" class="p-2 bg-slate-800 border border-slate-700 rounded text-white">
+        <input type="text" id="item-unit" placeholder="Unit (ft/kg)" class="p-2 bg-slate-800 border border-slate-700 rounded text-white">
+        <input type="number" id="item-rate" placeholder="Rate" class="p-2 bg-slate-800 border border-slate-700 rounded text-white">
+      </div>
+      <button onclick="addItem()" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold p-2 rounded">Add Item</button>
+    </div>
+
+    <!-- Printable Bill Card (Pure White Background for Printing) -->
+    <div id="printable-bill" class="bg-white text-slate-900 p-4 rounded-lg shadow-lg border border-slate-200">
+      <h3 class="font-bold text-center border-b pb-2 mb-2 text-slate-900">BILL RECEIPT</h3>
+      
+      <table class="w-full text-sm border-collapse">
         <thead>
-            <tr class="border-b">
-                <th class="text-left py-2">Item</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Total</th>
-            </tr>
+          <tr class="border-b text-slate-700">
+            <th class="text-left py-1">Item</th>
+            <th class="text-center">Qty</th>
+            <th class="text-center">Rate</th>
+            <th class="text-right">Total</th>
+          </tr>
         </thead>
-        <tbody id="bill-body"></tbody>
-    </table>
+        <tbody id="bill-items-body"></tbody>
+      </table>
 
-    <!-- Totals -->
-    <div class="border-t pt-2 space-y-1">
-        <div class="flex justify-between font-bold"><span>Subtotal:</span> <span id="sub-total">0</span></div>
-        <div class="flex justify-between items-center">
-            <span>Discount:</span>
-            <input type="number" id="discount-val" value="0" oninput="calculate()" class="w-20 border rounded p-1 text-right">
+      <!-- Totals & Discount -->
+      <div class="mt-4 pt-2 border-t border-slate-300 space-y-1 font-bold text-sm text-slate-900">
+        <div class="flex justify-between">
+          <span>Subtotal:</span>
+          <span id="sub-total">Rs 0</span>
         </div>
-        <div class="flex justify-between font-bold text-lg text-red-600 border-t mt-2 pt-1">
-            <span>Total Amount:</span> <span id="grand-total">0</span>
+        <div class="flex justify-between items-center my-1">
+          <span>Discount:</span>
+          <input type="number" id="discount-val" value="0" oninput="calculate()" class="w-20 border border-slate-400 rounded p-1 text-right bg-slate-100 text-slate-900 font-bold">
         </div>
+        <div class="flex justify-between text-base text-red-600 border-t pt-1">
+          <span>Total Amount:</span>
+          <span id="grand-total">Rs 0</span>
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- Buttons -->
-<div class="max-w-md mx-auto grid grid-cols-2 gap-2 mt-4">
-    <button onclick="downloadPDF()" class="bg-rose-600 text-white p-3 rounded font-bold">PDF Download</button>
-    <button onclick="window.print()" class="bg-blue-600 text-white p-3 rounded font-bold">Print Bill</button>
-</div>
+    <!-- Action Buttons -->
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white p-3 rounded font-bold">PDF Download</button>
+      <button onclick="saveBill()" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded font-bold">Save</button>
+      <button onclick="sendWA()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-3 rounded col-span-2 font-bold">Send on WhatsApp</button>
+    </div>
+  </div>
 
-<script>
+  <script>
     let items = [];
 
     function addItem() {
-        let name = document.getElementById('item-name').value;
-        let qty = parseFloat(document.getElementById('item-qty').value) || 0;
-        let unit = document.getElementById('item-unit').value;
-        let rate = parseFloat(document.getElementById('item-rate').value) || 0;
-        let total = qty * rate;
+      let name = document.getElementById('item-name').value;
+      let qty = parseFloat(document.getElementById('item-qty').value) || 0;
+      let unit = document.getElementById('item-unit').value || '';
+      let rate = parseFloat(document.getElementById('item-rate').value) || 0;
+      let total = qty * rate;
 
-        if (name && qty > 0) {
-            items.push({name, qty, unit, rate, total});
-            calculate();
-            // Clear inputs
-            document.getElementById('item-name').value = '';
-            document.getElementById('item-qty').value = '';
-            document.getElementById('item-unit').value = '';
-            document.getElementById('item-rate').value = '';
-        }
+      if (name && qty > 0) {
+        items.push({ name, qty, unit, rate, total });
+        calculate();
+
+        document.getElementById('item-name').value = '';
+        document.getElementById('item-qty').value = '';
+        document.getElementById('item-unit').value = '';
+        document.getElementById('item-rate').value = '';
+      }
     }
 
     function calculate() {
-        let sub = items.reduce((sum, i) => sum + i.total, 0);
-        let disc = parseFloat(document.getElementById('discount-val').value) || 0;
-        let grand = sub - disc;
+      let sub = items.reduce((sum, item) => sum + item.total, 0);
+      let disc = parseFloat(document.getElementById('discount-val').value) || 0;
+      let grand = sub - disc;
 
-        document.getElementById('sub-total').innerText = sub;
-        document.getElementById('grand-total').innerText = grand;
+      document.getElementById('sub-total').innerText = 'Rs ' + sub;
+      document.getElementById('grand-total').innerText = 'Rs ' + grand;
 
-        let tbody = document.getElementById('bill-body');
-        tbody.innerHTML = items.map(i => `
-            <tr class="border-b">
-                <td class="py-2">${i.name}</td>
-                <td class="text-center">${i.qty} ${i.unit}</td>
-                <td class="text-center">${i.rate}</td>
-                <td class="text-right">${i.total}</td>
-            </tr>
-        `).join('');
+      let tbody = document.getElementById('bill-items-body');
+      tbody.innerHTML = items.map(item => `
+        <tr class="border-b">
+          <td class="py-1 text-slate-800">${item.name}</td>
+          <td class="text-center text-slate-800">${item.qty} ${item.unit}</td>
+          <td class="text-center text-slate-800">${item.rate}</td>
+          <td class="text-right text-slate-800">Rs ${item.total}</td>
+        </tr>
+      `).join('');
     }
 
     function downloadPDF() {
-        const element = document.getElementById('bill');
-        html2pdf().from(element).save('Anwar-Iron-Bill.pdf');
+      const element = document.getElementById('printable-bill');
+      html2pdf().from(element).save('Anwar-Iron-Bill.pdf');
     }
-</script>
 
+    function saveBill() {
+      let bills = JSON.parse(localStorage.getItem('my_bills') || '[]');
+      bills.push({
+        name: document.getElementById('cust-name').value,
+        total: document.getElementById('grand-total').innerText,
+        date: new Date().toLocaleDateString()
+      });
+      localStorage.setItem('my_bills', JSON.stringify(bills));
+      alert('بل محفوظ کر لیا گیا ہے!');
+    }
+
+    function sendWA() {
+      let phone = document.getElementById('cust-phone').value;
+      let grand = document.getElementById('grand-total').innerText;
+      let msg = `Anwar Iron Store - Bill Total: ${grand}`;
+      window.open(`https://wa.me/92${phone.replace(/^0/, '')}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+  </script>
 </body>
 </html>
