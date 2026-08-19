@@ -1,364 +1,97 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr" class="notranslate" translate="no">
+<html lang="ur" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google" content="notranslate">
-  <meta name="theme-color" content="#111827">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Anwar Iron & Hardware Store</title>
-  
+  <title>Anwar Iron Store</title>
   <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
-    body { font-family: 'Poppins', sans-serif; background-color: #0f172a; color: #f8fafc; }
-    .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; }
-    
-    @media print {
-      body * { visibility: hidden; }
-      #printable-bill, #printable-bill * { visibility: visible; }
-      #printable-bill { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
-      .no-print { display: none !important; }
-    }
+    body { background-color: #0f172a; color: white; font-family: sans-serif; }
+    .bill-box { background: white; color: black; padding: 20px; border-radius: 10px; }
   </style>
 </head>
-<body class="p-2 sm:p-6 min-h-screen">
+<body class="p-4">
 
-  <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-4 sm:p-8">
+<div class="max-w-md mx-auto space-y-4">
+  <h2 class="text-xl font-bold text-amber-500 text-center">ANWAR IRON STORE</h2>
+
+  <!-- Inputs -->
+  <input type="text" id="cust-name" placeholder="کسٹمر نام" class="w-full p-2 bg-slate-800 rounded">
+  <input type="tel" id="cust-phone" placeholder="واٹس ایپ نمبر (03xx...)" class="w-full p-2 bg-slate-800 rounded">
+  
+  <div class="grid grid-cols-2 gap-2">
+    <input type="text" id="item-name" placeholder="آئٹم" class="p-2 bg-slate-800 rounded">
+    <input type="number" id="item-rate" placeholder="ریٹ" class="p-2 bg-slate-800 rounded">
+  </div>
+  <button onclick="addItem()" class="w-full bg-amber-600 p-2 rounded font-bold">آئٹم شامل کریں</button>
+
+  <!-- Bill View -->
+  <div id="printable-bill" class="bill-box">
+    <h3 class="font-bold border-b mb-2">بل کی تفصیل</h3>
+    <table class="w-full text-sm" id="bill-table">
+      <thead><tr class="border-b"><th>آئٹم</th><th>ریٹ</th></tr></thead>
+      <tbody id="bill-items"></tbody>
+    </table>
     
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-800 pb-4 mb-6">
-      <div class="text-center sm:text-left mb-2 sm:mb-0">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-amber-500 tracking-wide">ANWAR IRON & HARDWARE STORE</h1>
-        <p class="text-xs sm:text-sm text-slate-400">Building Materials, Girders, Pipes & Hardware Essentials</p>
+    <div class="mt-4 pt-2 border-t font-bold">
+      <div class="flex justify-between"><span>سب ٹوٹل:</span> <span id="sub-total">0</span></div>
+      <div class="flex justify-between">
+        <span>ڈسکاؤنٹ:</span> 
+        <input type="number" id="discount-val" value="0" oninput="calculate()" class="w-20 text-right border">
       </div>
-      <div class="flex items-center space-x-2">
-        <span id="sync-status" class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-          <i class="fa-solid fa-wifi mr-1"></i> Ready / Offline Storage
-        </span>
-      </div>
+      <div class="flex justify-between text-lg mt-2 text-red-600"><span>کل رقم:</span> <span id="grand-total">0</span></div>
     </div>
-
-    <!-- Navigation Tabs -->
-    <div class="flex space-x-2 mb-6 border-b border-slate-800 no-print">
-      <button id="tab-create" onclick="switchTab('create')" class="px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400">Create Bill</button>
-      <button id="tab-history" onclick="switchTab('history')" class="px-4 py-2 font-semibold text-slate-400 hover:text-amber-400">Bills History & Search</button>
-    </div>
-
-    <!-- CREATE BILL SECTION -->
-    <div id="section-create" class="space-y-6">
-      <!-- Customer Info -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Customer Name / نام کسٹمر</label>
-          <input type="text" id="cust-name" placeholder="Enter Name (e.g. Ali / علی)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile / WhatsApp Number (کیسٹمر نمبر)</label>
-          <input type="tel" id="cust-phone" placeholder="03001234567" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
-        </div>
-      </div>
-
-      <!-- Add Item Form -->
-      <div class="bg-slate-800/30 p-4 rounded-xl border border-slate-700/60 space-y-3">
-        <h3 class="text-sm font-semibold text-slate-300">Add Items (آئٹم شامل کریں - اردو / English)</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
-          <input type="text" id="item-name" placeholder="Item Name / نام (e.g. بالا 6 فٹ / Girder)" class="sm:col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
-          <input type="number" id="item-qty" placeholder="Qty (تعداد)" class="sm:col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
-          <input type="text" id="item-unit" placeholder="Unit (Feet/Pcs/Kg)" class="sm:col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
-          <input type="number" id="item-rate" placeholder="Rate (ریٹ)" class="sm:col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
-        </div>
-        <button onclick="addItem()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-sm transition">
-          + Add Item to Bill
-        </button>
-      </div>
-
-      <!-- Bill Preview Table -->
-      <div id="printable-bill" class="bg-slate-950 p-4 sm:p-6 rounded-xl border border-slate-800">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-          <div>
-            <h2 class="text-lg font-bold text-amber-500">ANWAR IRON STORE</h2>
-            <p id="bill-cust-display" class="text-xs text-slate-300">Customer: Guest</p>
-            <p id="bill-phone-display" class="text-xs text-slate-400">Phone: N/A</p>
-          </div>
-          <div class="text-right">
-            <p id="bill-id-display" class="text-xs text-slate-400">Bill #: -</p>
-            <p id="bill-date-display" class="text-xs text-slate-400">Date: -</p>
-          </div>
-        </div>
-
-        <table class="w-full text-left text-xs sm:text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-slate-400">
-              <th class="py-2">Item / تفسیل</th>
-              <th class="py-2 text-center">Qty</th>
-              <th class="py-2 text-right">Rate</th>
-              <th class="py-2 text-right">Total</th>
-              <th class="py-2 text-center no-print">Action</th>
-            </tr>
-          </thead>
-          <tbody id="bill-items-body">
-            <!-- Items rendered dynamically -->
-          </tbody>
-        </table>
-
-        <div class="border-t border-slate-800 mt-4 pt-3 flex justify-between items-center text-sm font-bold">
-          <span>Total Amount (کل رقم):</span>
-          <span id="bill-total-amount" class="text-amber-400 text-base">Rs 0</span>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 no-print">
-        <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
-          <i class="fa-solid fa-file-pdf mr-1.5"></i> Save PDF
-        </button>
-        <button onclick="sendWhatsAppText()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
-          <i class="fa-brands fa-whatsapp mr-1.5"></i> WhatsApp Text
-        </button>
-        <button onclick="sendWhatsAppImage()" class="bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
-          <i class="fa-solid fa-image mr-1.5"></i> WhatsApp Image
-        </button>
-        <button onclick="sendSMS()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
-          <i class="fa-solid fa-comment-sms mr-1.5"></i> Normal SMS
-        </button>
-      </div>
-      
-      <button onclick="saveAndClearBill()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-lg text-xs font-semibold border border-slate-700 no-print">
-        <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Bill to History & Start New
-      </button>
-    </div>
-
-    <!-- BILLS HISTORY & SEARCH SECTION -->
-    <div id="section-history" class="space-y-4 hidden no-print">
-      <input type="text" id="search-input" onkeyup="searchBills()" placeholder="Search by Customer Name or Bill # (نام یا بل کوڈ لکھیں)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-amber-500">
-      
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs sm:text-sm">
-          <thead>
-            <tr class="border-b border-slate-800 text-slate-400 bg-slate-800/40">
-              <th class="p-2.5">Bill #</th>
-              <th class="p-2.5">Date</th>
-              <th class="p-2.5">Customer</th>
-              <th class="p-2.5 text-right">Amount</th>
-              <th class="p-2.5 text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody id="history-table-body">
-            <!-- Saved bills loaded here -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
   </div>
 
-  <script>
-    let currentItems = [];
-    let savedBills = JSON.parse(localStorage.getItem('anwar_bills') || '[]');
+  <!-- Buttons -->
+  <div class="grid grid-cols-2 gap-2">
+    <button onclick="downloadPDF()" class="bg-rose-600 p-3 rounded">PDF ڈاؤن لوڈ</button>
+    <button onclick="saveBill()" class="bg-blue-600 p-3 rounded">سیو کریں</button>
+    <button onclick="sendWA()" class="bg-emerald-600 p-3 rounded col-span-2">WhatsApp پر بھیجیں</button>
+  </div>
+</div>
 
-    // Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').then(() => {
-        console.log("Service Worker Active - App Ready Offline!");
-      });
-    }
+<script>
+  let items = [];
+  
+  function addItem() {
+    let name = document.getElementById('item-name').value;
+    let rate = parseFloat(document.getElementById('item-rate').value) || 0;
+    items.push({name, rate});
+    calculate();
+  }
 
-    function switchTab(tab) {
-      if(tab === 'create') {
-        document.getElementById('section-create').classList.remove('hidden');
-        document.getElementById('section-history').classList.add('hidden');
-        document.getElementById('tab-create').className = "px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400";
-        document.getElementById('tab-history').className = "px-4 py-2 font-semibold text-slate-400 hover:text-amber-400";
-      } else {
-        document.getElementById('section-create').classList.add('hidden');
-        document.getElementById('section-history').classList.remove('hidden');
-        document.getElementById('tab-history').className = "px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400";
-        document.getElementById('tab-create').className = "px-4 py-2 font-semibold text-slate-400 hover:text-amber-400";
-        renderHistory();
-      }
-    }
+  function calculate() {
+    let sub = items.reduce((a, b) => a + b.rate, 0);
+    let disc = parseFloat(document.getElementById('discount-val').value) || 0;
+    document.getElementById('sub-total').innerText = sub;
+    document.getElementById('grand-total').innerText = sub - disc;
+    
+    let html = items.map(i => `<tr><td>${i.name}</td><td>${i.rate}</td></tr>`).join('');
+    document.getElementById('bill-items').innerHTML = html;
+  }
 
-    function updateHeaderInfo() {
-      const name = document.getElementById('cust-name').value || 'Guest';
-      const phone = document.getElementById('cust-phone').value || 'N/A';
-      document.getElementById('bill-cust-display').innerText = `Customer: ${name}`;
-      document.getElementById('bill-phone-display').innerText = `Phone: ${phone}`;
-      document.getElementById('bill-date-display').innerText = `Date: ${new Date().toLocaleDateString()}`;
-      document.getElementById('bill-id-display').innerText = `Bill #: AIH-${Date.now().toString().slice(-4)}`;
-    }
+  function downloadPDF() {
+    html2pdf().from(document.getElementById('printable-bill')).save('Bill.pdf');
+  }
 
-    document.getElementById('cust-name').addEventListener('input', updateHeaderInfo);
-    document.getElementById('cust-phone').addEventListener('input', updateHeaderInfo);
+  function saveBill() {
+    let bills = JSON.parse(localStorage.getItem('my_bills') || '[]');
+    bills.push({name: document.getElementById('cust-name').value, total: document.getElementById('grand-total').innerText});
+    localStorage.setItem('my_bills', JSON.stringify(bills));
+    alert('بل سیو ہو گیا!');
+  }
 
-    function addItem() {
-      const name = document.getElementById('item-name').value.trim();
-      const qty = parseFloat(document.getElementById('item-qty').value) || 0;
-      const unit = document.getElementById('item-unit').value.trim() || 'Pcs';
-      const rate = parseFloat(document.getElementById('item-rate').value) || 0;
+  function sendWA() {
+    let phone = document.getElementById('cust-phone').value;
+    let msg = `بل کی تفصیل: کل رقم ${document.getElementById('grand-total').innerText}`;
+    window.open(`https://wa.me/92${phone.substring(1)}?text=${encodeURIComponent(msg)}`, '_blank');
+  }
 
-      if(!name || qty <= 0 || rate <= 0) {
-        alert('براہ کرم آئٹم کا نام، تعداد اور ریٹ درست درج کریں۔');
-        return;
-      }
-
-      currentItems.push({ name, qty, unit, rate, total: qty * rate });
-      renderCurrentBill();
-      
-      document.getElementById('item-name').value = '';
-      document.getElementById('item-qty').value = '';
-      document.getElementById('item-rate').value = '';
-    }
-
-    function removeItem(index) {
-      currentItems.splice(index, 1);
-      renderCurrentBill();
-    }
-
-    function renderCurrentBill() {
-      updateHeaderInfo();
-      const tbody = document.getElementById('bill-items-body');
-      tbody.innerHTML = '';
-      let grandTotal = 0;
-
-      currentItems.forEach((item, index) => {
-        grandTotal += item.total;
-        tbody.innerHTML += `
-          <tr class="border-b border-slate-800/50">
-            <td class="py-2">${item.name}</td>
-            <td class="py-2 text-center">${item.qty} ${item.unit}</td>
-            <td class="py-2 text-right">Rs ${item.rate}</td>
-            <td class="py-2 text-right">Rs ${item.total}</td>
-            <td class="py-2 text-center no-print">
-              <button onclick="removeItem(${index})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `;
-      });
-
-      document.getElementById('bill-total-amount').innerText = `Rs ${grandTotal}`;
-    }
-
-    function downloadPDF() {
-      const element = document.getElementById('printable-bill');
-      const name = document.getElementById('cust-name').value || 'Bill';
-      const opt = {
-        margin:       0.2,
-        filename:     `Anwar_Store_${name}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(element).save();
-    }
-
-    function formatPhoneNumber(phone) {
-      let cleaned = phone.replace(/\D/g, '');
-      if(cleaned.startsWith('03')) {
-        cleaned = '92' + cleaned.slice(1);
-      }
-      return cleaned;
-    }
-
-    function sendWhatsAppText() {
-      const phone = formatPhoneNumber(document.getElementById('cust-phone').value);
-      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
-      
-      let text = `*ANWAR IRON & HARDWARE STORE*\n`;
-      text += `Customer: ${document.getElementById('cust-name').value}\n`;
-      text += `-----------------------------\n`;
-      currentItems.forEach(i => {
-        text += `${i.name} - ${i.qty} ${i.unit} @ ${i.rate} = Rs ${i.total}\n`;
-      });
-      text += `-----------------------------\n`;
-      text += `*Total Amount: ${document.getElementById('bill-total-amount').innerText}*\n`;
-      text += `Thank you for your business!`;
-
-      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
-    }
-
-    function sendWhatsAppImage() {
-      downloadPDF();
-      const phone = formatPhoneNumber(document.getElementById('cust-phone').value);
-      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
-      setTimeout(() => {
-        window.open(`https://wa.me/${phone}?text=${encodeURIComponent('محترم کسٹمر، آپ کے بل کی پی ڈی ایف بھیجی جا رہی ہے۔')}`, '_blank');
-      }, 1000);
-    }
-
-    function sendSMS() {
-      const phone = document.getElementById('cust-phone').value;
-      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
-      
-      let text = `ANWAR IRON STORE\nCust: ${document.getElementById('cust-name').value}\nTotal: ${document.getElementById('bill-total-amount').innerText}\nItems:\n`;
-      currentItems.forEach(i => { text += `${i.name}: Rs ${i.total}\n`; });
-      
-      window.open(`sms:${phone}?body=${encodeURIComponent(text)}`, '_self');
-    }
-
-    function saveAndClearBill() {
-      if(currentItems.length === 0) { alert('بل میں کوئی آئٹم موجود نہیں ہے۔'); return; }
-
-      const billData = {
-        id: document.getElementById('bill-id-display').innerText,
-        date: new Date().toLocaleDateString(),
-        custName: document.getElementById('cust-name').value || 'Guest',
-        phone: document.getElementById('cust-phone').value || 'N/A',
-        items: [...currentItems],
-        total: document.getElementById('bill-total-amount').innerText
-      };
-
-      savedBills.unshift(billData);
-      localStorage.setItem('anwar_bills', JSON.stringify(savedBills));
-
-      alert('بل محفوظ کر لیا گیا ہے!');
-      currentItems = [];
-      document.getElementById('cust-name').value = '';
-      document.getElementById('cust-phone').value = '';
-      renderCurrentBill();
-    }
-
-    function renderHistory() {
-      const tbody = document.getElementById('history-table-body');
-      tbody.innerHTML = '';
-      savedBills.forEach((bill, index) => {
-        tbody.innerHTML += `
-          <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
-            <td class="p-2.5 font-mono text-amber-500">${bill.id}</td>
-            <td class="p-2.5 text-slate-400">${bill.date}</td>
-            <td class="p-2.5">${bill.custName}</td>
-            <td class="p-2.5 text-right font-bold">${bill.total}</td>
-            <td class="p-2.5 text-center">
-              <button onclick="loadBillFromHistory(${index})" class="text-sky-400 hover:text-sky-300 text-xs">View/Load</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function searchBills() {
-      const query = document.getElementById('search-input').value.toLowerCase();
-      const rows = document.getElementById('history-table-body').getElementsByTagName('tr');
-      Array.from(rows).forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(query) ? '' : 'none';
-      });
-    }
-
-    function loadBillFromHistory(index) {
-      const bill = savedBills[index];
-      currentItems = [...bill.items];
-      document.getElementById('cust-name').value = bill.custName;
-      document.getElementById('cust-phone').value = bill.phone;
-      switchTab('create');
-      renderCurrentBill();
-    }
-  </script>
+  // Service Worker
+  if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');
+</script>
 </body>
 </html>
