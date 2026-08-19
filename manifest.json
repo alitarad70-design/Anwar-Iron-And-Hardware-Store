@@ -1,7 +1,7 @@
 {
-  "name": "Anwar Iron Store",
+  "name": "Anwar Iron Store App",
   "short_name": "AnwarStore",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=3",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
