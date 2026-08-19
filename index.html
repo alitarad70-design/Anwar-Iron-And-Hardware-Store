@@ -1,374 +1,364 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="notranslate" translate="no">
+<html lang="ur" dir="ltr" class="notranslate" translate="no">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google" content="notranslate">
-    <meta name="theme-color" content="#111827">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Anwar Iron and Hardware Store</title>
-   <link rel="manifest" href="./manifest.json"> 
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkFud2FyIElyb24gYW5kIEhhcmR3YXJlIFN0b3JlIiwKICAic2hvcnRfbmFtZSI6ICJBbndhciBTdG9yZSIsCiAgInN0YXJ0X3VybCI6ICIuL2luZGV4Lmh0bWwiLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiNmM2Y0ZjYiLAogICJ0aGVtZV9jb2xvciI6ICIjMTExODI3IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMzE0NC8zMTQ0NDU2LnBuZyIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvcG5nIiwKICAgICAgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIgotICAgIH0KICBdCn0=">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <meta name="theme-color" content="#111827">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Anwar Iron & Hardware Store</title>
+  
+  <link rel="manifest" href="./manifest.json">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <style>
-        * { 
-            box-sizing: border-box; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            direction: ltr !important;
-            text-align: left !important;
-        }
-        
-        body { background: #f3f4f6; padding: 15px; color: #1f2937; direction: ltr !important; }
-        
-        .bill-card { max-width: 450px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        
-        /* HEADER & LOGO */
-        .header { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: 10px; margin-bottom: 8px; justify-content: flex-start !important; }
-        .logo-svg { width: 32px; height: 32px; flex-shrink: 0; margin-top: 2px; }
-        .store-info h1 { font-size: 16px; font-weight: 700; color: #111827; line-height: 1.2; text-align: left !important; }
-        .store-info p { font-size: 11px; color: #6b7280; margin-top: 2px; text-align: left !important; }
-        
-        .divider { border-bottom: 1.5px solid #111827; margin: 8px 0 10px 0; }
-        
-        /* META DETAILS */
-        .bill-meta { display: flex !important; justify-content: space-between !important; font-size: 12px; color: #374151; margin-bottom: 12px; font-weight: 500; }
-        
-        /* TABLE STYLING */
-        .bill-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-        .bill-table th { text-align: left !important; font-size: 12px; font-weight: 600; color: #374151; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
-        .bill-table th:nth-child(2) { text-align: center !important; }
-        .bill-table th:nth-child(3) { text-align: right !important; }
-        
-        .bill-table td { font-size: 12px; color: #1f2937; padding: 8px 0; border-bottom: 1px solid #f3f4f6; }
-        .bill-table td:nth-child(1) { text-align: left !important; }
-        .bill-table td:nth-child(2) { text-align: center !important; }
-        .bill-table td:nth-child(3) { text-align: right !important; }
-        
-        /* TOTALS */
-        .totals-container { margin-top: 10px; font-size: 12px; color: #374151; }
-        .total-row { display: flex !important; justify-content: space-between !important; padding: 2px 0; }
-        .grand-total-row { display: flex !important; justify-content: space-between !important; margin-top: 6px; font-size: 15px; font-weight: 700; color: #d97706; }
-        
-        .thank-you { text-align: center !important; font-size: 11px; color: #6b7280; margin-top: 20px; }
-        
-        /* INPUT FORM */
-        .input-section { background: #f9fafb; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb; margin-top: 15px; }
-        .form-group { margin-bottom: 8px; text-align: left !important; }
-        .form-group label { display: block; font-size: 11px; font-weight: 600; color: #4b5563; margin-bottom: 2px; text-align: left !important; }
-        .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px; font-size: 13px; background: #fff; text-align: left !important; direction: ltr !important; }
-        
-        .qty-unit-row { display: flex !important; flex-direction: row !important; gap: 6px; }
-        .qty-unit-row input { flex: 2; }
-        .qty-unit-row select { flex: 1.5; }
-
-        /* BUTTONS */
-        .btn-add { background: #111827; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; margin-top: 6px; text-align: center !important; }
-        .action-buttons { display: flex !important; flex-direction: column; gap: 8px; margin-top: 12px; }
-        .btn-row { display: flex !important; gap: 8px; }
-        .btn-share-img { background: #25D366; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
-        .btn-share-txt { background: #059669; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
-        .btn-print { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; flex: 1; text-align: center !important; }
-        .btn-install { background: #7c3aed; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; width: 100%; display: none; text-align: center !important; }
-        .btn-del { color: #ef4444; border: none; background: none; cursor: pointer; font-weight: bold; }
-
-        @media print {
-            body { background: #fff; padding: 0; }
-            .bill-card { box-shadow: none; padding: 0; max-width: 100%; }
-            .no-print { display: none !important; }
-        }
-    </style>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap');
+    body { font-family: 'Poppins', sans-serif; background-color: #0f172a; color: #f8fafc; }
+    .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; }
+    
+    @media print {
+      body * { visibility: hidden; }
+      #printable-bill, #printable-bill * { visibility: visible; }
+      #printable-bill { position: absolute; left: 0; top: 0; width: 100%; color: #000 !important; background: #fff !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
 </head>
-<body class="notranslate">
+<body class="p-2 sm:p-6 min-h-screen">
 
-<div class="bill-card" id="printableArea">
-    <!-- HEADER -->
-    <div class="header">
-        <svg class="logo-svg" viewBox="0 0 100 100">
-            <polyline points="20,60 50,30 80,60" fill="none" stroke="#d97706" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="68" cy="40" r="12" fill="none" stroke="#d97706" stroke-width="4"/>
-            <circle cx="68" cy="40" r="4" fill="#d97706"/>
-        </svg>
-        <div class="store-info">
-            <h1>Anwar Iron and Hardware Store</h1>
-            <p>Main Ajnala Road, Bhalwal</p>
-        </div>
+  <div class="max-w-4xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-4 sm:p-8">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-center border-b border-slate-800 pb-4 mb-6">
+      <div class="text-center sm:text-left mb-2 sm:mb-0">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-amber-500 tracking-wide">ANWAR IRON & HARDWARE STORE</h1>
+        <p class="text-xs sm:text-sm text-slate-400">Building Materials, Girders, Pipes & Hardware Essentials</p>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span id="sync-status" class="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+          <i class="fa-solid fa-wifi mr-1"></i> Ready / Offline Storage
+        </span>
+      </div>
     </div>
 
-    <div class="divider"></div>
+    <!-- Navigation Tabs -->
+    <div class="flex space-x-2 mb-6 border-b border-slate-800 no-print">
+      <button id="tab-create" onclick="switchTab('create')" class="px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400">Create Bill</button>
+      <button id="tab-history" onclick="switchTab('history')" class="px-4 py-2 font-semibold text-slate-400 hover:text-amber-400">Bills History & Search</button>
+    </div>
 
-    <!-- META -->
-    <div class="bill-meta">
+    <!-- CREATE BILL SECTION -->
+    <div id="section-create" class="space-y-6">
+      <!-- Customer Info -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-800/50 p-4 rounded-xl border border-slate-700">
         <div>
-            <div>Bill #<span id="billNo">1001</span></div>
-            <div>Customer: <span id="dispCust">--</span></div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Customer Name / نام کسٹمر</label>
+          <input type="text" id="cust-name" placeholder="Enter Name (e.g. Ali / علی)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
         </div>
-        <div style="text-align: right !important;">
-            <div id="billDate"></div>
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Mobile / WhatsApp Number (کیسٹمر نمبر)</label>
+          <input type="tel" id="cust-phone" placeholder="03001234567" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-500">
         </div>
-    </div>
+      </div>
 
-    <!-- BILL ITEMS TABLE -->
-    <table class="bill-table">
-        <thead>
-            <tr>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th class="no-print" style="width:15px;"></th>
+      <!-- Add Item Form -->
+      <div class="bg-slate-800/30 p-4 rounded-xl border border-slate-700/60 space-y-3">
+        <h3 class="text-sm font-semibold text-slate-300">Add Items (آئٹم شامل کریں - اردو / English)</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+          <input type="text" id="item-name" placeholder="Item Name / نام (e.g. بالا 6 فٹ / Girder)" class="sm:col-span-5 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+          <input type="number" id="item-qty" placeholder="Qty (تعداد)" class="sm:col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+          <input type="text" id="item-unit" placeholder="Unit (Feet/Pcs/Kg)" class="sm:col-span-2 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+          <input type="number" id="item-rate" placeholder="Rate (ریٹ)" class="sm:col-span-3 bg-slate-900 border border-slate-700 rounded-lg p-2 text-sm text-white">
+        </div>
+        <button onclick="addItem()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold py-2 rounded-lg text-sm transition">
+          + Add Item to Bill
+        </button>
+      </div>
+
+      <!-- Bill Preview Table -->
+      <div id="printable-bill" class="bg-slate-950 p-4 sm:p-6 rounded-xl border border-slate-800">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-amber-500">ANWAR IRON STORE</h2>
+            <p id="bill-cust-display" class="text-xs text-slate-300">Customer: Guest</p>
+            <p id="bill-phone-display" class="text-xs text-slate-400">Phone: N/A</p>
+          </div>
+          <div class="text-right">
+            <p id="bill-id-display" class="text-xs text-slate-400">Bill #: -</p>
+            <p id="bill-date-display" class="text-xs text-slate-400">Date: -</p>
+          </div>
+        </div>
+
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400">
+              <th class="py-2">Item / تفسیل</th>
+              <th class="py-2 text-center">Qty</th>
+              <th class="py-2 text-right">Rate</th>
+              <th class="py-2 text-right">Total</th>
+              <th class="py-2 text-center no-print">Action</th>
             </tr>
-        </thead>
-        <tbody id="billBody"></tbody>
-    </table>
+          </thead>
+          <tbody id="bill-items-body">
+            <!-- Items rendered dynamically -->
+          </tbody>
+        </table>
 
-    <!-- TOTALS -->
-    <div class="totals-container">
-        <div class="total-row">
-            <span>Subtotal</span>
-            <span>Rs <span id="subTotal">0</span></span>
+        <div class="border-t border-slate-800 mt-4 pt-3 flex justify-between items-center text-sm font-bold">
+          <span>Total Amount (کل رقم):</span>
+          <span id="bill-total-amount" class="text-amber-400 text-base">Rs 0</span>
         </div>
-        <div class="total-row">
-            <span>Discount</span>
-            <span>-Rs <span id="dispDiscount">0</span></span>
-        </div>
-        <div class="grand-total-row">
-            <span>Total amount</span>
-            <span>Rs <span id="grandTotal">0</span></span>
-        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 no-print">
+        <button onclick="downloadPDF()" class="bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
+          <i class="fa-solid fa-file-pdf mr-1.5"></i> Save PDF
+        </button>
+        <button onclick="sendWhatsAppText()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
+          <i class="fa-brands fa-whatsapp mr-1.5"></i> WhatsApp Text
+        </button>
+        <button onclick="sendWhatsAppImage()" class="bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
+          <i class="fa-solid fa-image mr-1.5"></i> WhatsApp Image
+        </button>
+        <button onclick="sendSMS()" class="bg-sky-600 hover:bg-sky-700 text-white py-2.5 rounded-lg text-xs font-semibold flex items-center justify-center">
+          <i class="fa-solid fa-comment-sms mr-1.5"></i> Normal SMS
+        </button>
+      </div>
+      
+      <button onclick="saveAndClearBill()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-lg text-xs font-semibold border border-slate-700 no-print">
+        <i class="fa-solid fa-floppy-disk mr-1.5"></i> Save Bill to History & Start New
+      </button>
     </div>
 
-    <div class="thank-you">Thank you</div>
-
-    <!-- INPUT FORM -->
-    <div class="input-section no-print">
-        <button id="installBtn" class="btn-install" onclick="installApp()">📲 Install App on Phone</button>
-        
-        <div class="form-group" style="margin-top: 8px;">
-            <label>Customer Name</label>
-            <input type="text" id="custName" placeholder="Customer Name" oninput="updateCust()">
-        </div>
-        <div class="form-group">
-            <label>Item Name</label>
-            <input type="text" id="itemName" placeholder="e.g. ball 6ft 2/2.25">
-        </div>
-        
-        <!-- QTY + UNIT DROPDOWN -->
-        <div class="form-group">
-            <label>Quantity & Unit</label>
-            <div class="qty-unit-row">
-                <input type="number" id="itemQty" step="0.01" placeholder="Qty">
-                <select id="itemUnit">
-                    <option value="Pcs">Pcs</option>
-                    <option value="Feet">Feet</option>
-                    <option value="KG">KG</option>
-                    <option value="Meter">Meter</option>
-                    <option value="Bundle">Bundle</option>
-                    <option value="Length">Length</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>Rate (Rs)</label>
-            <input type="number" id="itemRate" step="0.01" placeholder="Rate">
-        </div>
-
-        <button class="btn-add" onclick="addItem()">+ Add Item</button>
-
-        <div class="form-group" style="margin-top: 10px;">
-            <label>Discount Amount (Rs)</label>
-            <input type="number" id="discountInput" value="0" oninput="updateDiscount()">
-        </div>
-
-        <div class="action-buttons">
-            <button class="btn-share-img" onclick="shareBillImage()">📲 Share Bill (Image/PDF)</button>
-            <div class="btn-row">
-                <button class="btn-share-txt" onclick="shareToWhatsAppText()">💬 Text Only</button>
-                <button class="btn-print" onclick="window.print()">📄 Save PDF</button>
-            </div>
-        </div>
+    <!-- BILLS HISTORY & SEARCH SECTION -->
+    <div id="section-history" class="space-y-4 hidden no-print">
+      <input type="text" id="search-input" onkeyup="searchBills()" placeholder="Search by Customer Name or Bill # (نام یا بل کوڈ لکھیں)" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-amber-500">
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 bg-slate-800/40">
+              <th class="p-2.5">Bill #</th>
+              <th class="p-2.5">Date</th>
+              <th class="p-2.5">Customer</th>
+              <th class="p-2.5 text-right">Amount</th>
+              <th class="p-2.5 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Saved bills loaded here -->
+          </tbody>
+        </table>
+      </div>
     </div>
-</div>
 
-<script>
-    document.getElementById('billDate').innerText = new Date().toISOString().split('T')[0];
+  </div>
 
-    let items = [];
-    let deferredPrompt;
+  <script>
+    let currentItems = [];
+    let savedBills = JSON.parse(localStorage.getItem('anwar_bills') || '[]');
 
-    // REGISTER SERVICE WORKER
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('SW Ready'))
-                .catch(err => console.log('SW Error', err));
-        });
+      navigator.serviceWorker.register('./sw.js').then(() => {
+        console.log("Service Worker Active - App Ready Offline!");
+      });
     }
 
-    // PWA INSTALL PROMPT HANDLER
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        const btn = document.getElementById('installBtn');
-        if(btn) btn.style.display = 'block';
-    });
-
-    function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    document.getElementById('installBtn').style.display = 'none';
-                }
-                deferredPrompt = null;
-            });
-        }
+    function switchTab(tab) {
+      if(tab === 'create') {
+        document.getElementById('section-create').classList.remove('hidden');
+        document.getElementById('section-history').classList.add('hidden');
+        document.getElementById('tab-create').className = "px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400";
+        document.getElementById('tab-history').className = "px-4 py-2 font-semibold text-slate-400 hover:text-amber-400";
+      } else {
+        document.getElementById('section-create').classList.add('hidden');
+        document.getElementById('section-history').classList.remove('hidden');
+        document.getElementById('tab-history').className = "px-4 py-2 font-semibold text-amber-400 border-b-2 border-amber-400";
+        document.getElementById('tab-create').className = "px-4 py-2 font-semibold text-slate-400 hover:text-amber-400";
+        renderHistory();
+      }
     }
 
-    function updateCust() {
-        const val = document.getElementById('custName').value.trim();
-        document.getElementById('dispCust').innerText = val ? val : '--';
+    function updateHeaderInfo() {
+      const name = document.getElementById('cust-name').value || 'Guest';
+      const phone = document.getElementById('cust-phone').value || 'N/A';
+      document.getElementById('bill-cust-display').innerText = `Customer: ${name}`;
+      document.getElementById('bill-phone-display').innerText = `Phone: ${phone}`;
+      document.getElementById('bill-date-display').innerText = `Date: ${new Date().toLocaleDateString()}`;
+      document.getElementById('bill-id-display').innerText = `Bill #: AIH-${Date.now().toString().slice(-4)}`;
     }
+
+    document.getElementById('cust-name').addEventListener('input', updateHeaderInfo);
+    document.getElementById('cust-phone').addEventListener('input', updateHeaderInfo);
 
     function addItem() {
-        const nameEl = document.getElementById('itemName');
-        const qtyEl = document.getElementById('itemQty');
-        const rateEl = document.getElementById('itemRate');
-        
-        const name = nameEl.value.trim();
-        const qty = parseFloat(qtyEl.value) || 0;
-        const unit = document.getElementById('itemUnit').value;
-        const rate = parseFloat(rateEl.value) || 0;
+      const name = document.getElementById('item-name').value.trim();
+      const qty = parseFloat(document.getElementById('item-qty').value) || 0;
+      const unit = document.getElementById('item-unit').value.trim() || 'Pcs';
+      const rate = parseFloat(document.getElementById('item-rate').value) || 0;
 
-        if (!name || qty <= 0 || rate <= 0) {
-            alert('Please enter Item Name, Quantity and Rate');
-            return;
-        }
+      if(!name || qty <= 0 || rate <= 0) {
+        alert('براہ کرم آئٹم کا نام، تعداد اور ریٹ درست درج کریں۔');
+        return;
+      }
 
-        items.push({ name, qty, unit, rate, amount: qty * rate });
-        
-        nameEl.value = '';
-        qtyEl.value = '';
-        rateEl.value = '';
-        
-        render();
-
-        setTimeout(() => {
-            nameEl.focus();
-        }, 50);
+      currentItems.push({ name, qty, unit, rate, total: qty * rate });
+      renderCurrentBill();
+      
+      document.getElementById('item-name').value = '';
+      document.getElementById('item-qty').value = '';
+      document.getElementById('item-rate').value = '';
     }
 
-    function removeItem(idx) {
-        items.splice(idx, 1);
-        render();
+    function removeItem(index) {
+      currentItems.splice(index, 1);
+      renderCurrentBill();
     }
 
-    function updateDiscount() {
-        calculateTotals();
+    function renderCurrentBill() {
+      updateHeaderInfo();
+      const tbody = document.getElementById('bill-items-body');
+      tbody.innerHTML = '';
+      let grandTotal = 0;
+
+      currentItems.forEach((item, index) => {
+        grandTotal += item.total;
+        tbody.innerHTML += `
+          <tr class="border-b border-slate-800/50">
+            <td class="py-2">${item.name}</td>
+            <td class="py-2 text-center">${item.qty} ${item.unit}</td>
+            <td class="py-2 text-right">Rs ${item.rate}</td>
+            <td class="py-2 text-right">Rs ${item.total}</td>
+            <td class="py-2 text-center no-print">
+              <button onclick="removeItem(${index})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('bill-total-amount').innerText = `Rs ${grandTotal}`;
     }
 
-    function render() {
-        const tbody = document.getElementById('billBody');
-        tbody.innerHTML = '';
-        let subtotal = 0;
-
-        items.forEach((item, index) => {
-            subtotal += item.amount;
-            tbody.innerHTML += `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.qty} ${item.unit}</td>
-                    <td>Rs ${item.amount.toLocaleString()}</td>
-                    <td class="no-print"><button class="btn-del" onclick="removeItem(${index})">×</button></td>
-                </tr>
-            `;
-        });
-
-        document.getElementById('subTotal').innerText = subtotal.toLocaleString();
-        calculateTotals();
+    function downloadPDF() {
+      const element = document.getElementById('printable-bill');
+      const name = document.getElementById('cust-name').value || 'Bill';
+      const opt = {
+        margin:       0.2,
+        filename:     `Anwar_Store_${name}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
     }
 
-    function calculateTotals() {
-        const subtotal = items.reduce((sum, item) => sum + item.amount, 0);
-        const discount = parseFloat(document.getElementById('discountInput').value) || 0;
-        document.getElementById('dispDiscount').innerText = discount.toLocaleString();
-        const finalTotal = Math.max(0, subtotal - discount);
-        document.getElementById('grandTotal').innerText = finalTotal.toLocaleString();
+    function formatPhoneNumber(phone) {
+      let cleaned = phone.replace(/\D/g, '');
+      if(cleaned.startsWith('03')) {
+        cleaned = '92' + cleaned.slice(1);
+      }
+      return cleaned;
     }
 
-    async function shareBillImage() {
-        if (items.length === 0) {
-            alert('Please add items to the bill first!');
-            return;
-        }
+    function sendWhatsAppText() {
+      const phone = formatPhoneNumber(document.getElementById('cust-phone').value);
+      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
+      
+      let text = `*ANWAR IRON & HARDWARE STORE*\n`;
+      text += `Customer: ${document.getElementById('cust-name').value}\n`;
+      text += `-----------------------------\n`;
+      currentItems.forEach(i => {
+        text += `${i.name} - ${i.qty} ${i.unit} @ ${i.rate} = Rs ${i.total}\n`;
+      });
+      text += `-----------------------------\n`;
+      text += `*Total Amount: ${document.getElementById('bill-total-amount').innerText}*\n`;
+      text += `Thank you for your business!`;
 
-        const inputSection = document.querySelector('.input-section');
-        const delButtons = document.querySelectorAll('.btn-del');
-        
-        inputSection.style.display = 'none';
-        delButtons.forEach(b => b.style.display = 'none');
-
-        try {
-            const card = document.getElementById('printableArea');
-            const canvas = await html2canvas(card, { scale: 2 });
-            
-            canvas.toBlob(async (blob) => {
-                const file = new File([blob], `Bill_${Date.now()}.png`, { type: 'image/png' });
-                
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: 'Bill Receipt',
-                        text: 'Bill from Anwar Iron and Hardware Store'
-                    });
-                } else {
-                    const link = document.createElement('a');
-                    link.download = `Bill_${Date.now()}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                    alert('Bill image downloaded!');
-                }
-            }, 'image/png');
-        } catch (err) {
-            alert('Could not generate bill image.');
-        } finally {
-            inputSection.style.display = 'block';
-            delButtons.forEach(b => b.style.display = 'inline-block');
-        }
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function shareToWhatsAppText() {
-        const cust = document.getElementById('dispCust').innerText;
-        const billNo = document.getElementById('billNo').innerText;
-        const date = document.getElementById('billDate').innerText;
-        const total = document.getElementById('grandTotal').innerText;
-
-        if (items.length === 0) {
-            alert('Please add items to the bill first!');
-            return;
-        }
-
-        let msg = `*Anwar Iron and Hardware Store*\nMain Ajnala Road, Bhalwal\n--------------------------------\n`;
-        msg += `*Bill #:* ${billNo}\n*Customer:* ${cust}\n*Date:* ${date}\n--------------------------------\n`;
-        
-        items.forEach(item => {
-            msg += `• *${item.name}* (${item.qty} ${item.unit}) = Rs ${item.amount}\n`;
-        });
-
-        const disc = document.getElementById('dispDiscount').innerText;
-        if(disc !== '0') {
-            msg += `\n*Discount:* -Rs ${disc}`;
-        }
-        msg += `\n*Total Amount:* Rs ${total}\n--------------------------------\n*Thank you!*`;
-
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    function sendWhatsAppImage() {
+      downloadPDF();
+      const phone = formatPhoneNumber(document.getElementById('cust-phone').value);
+      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
+      setTimeout(() => {
+        window.open(`https://wa.me/${phone}?text=${encodeURIComponent('محترم کسٹمر، آپ کے بل کی پی ڈی ایف بھیجی جا رہی ہے۔')}`, '_blank');
+      }, 1000);
     }
-</script>
+
+    function sendSMS() {
+      const phone = document.getElementById('cust-phone').value;
+      if(!phone) { alert('براہ کرم کسٹمر کا موبائل نمبر درج کریں۔'); return; }
+      
+      let text = `ANWAR IRON STORE\nCust: ${document.getElementById('cust-name').value}\nTotal: ${document.getElementById('bill-total-amount').innerText}\nItems:\n`;
+      currentItems.forEach(i => { text += `${i.name}: Rs ${i.total}\n`; });
+      
+      window.open(`sms:${phone}?body=${encodeURIComponent(text)}`, '_self');
+    }
+
+    function saveAndClearBill() {
+      if(currentItems.length === 0) { alert('بل میں کوئی آئٹم موجود نہیں ہے۔'); return; }
+
+      const billData = {
+        id: document.getElementById('bill-id-display').innerText,
+        date: new Date().toLocaleDateString(),
+        custName: document.getElementById('cust-name').value || 'Guest',
+        phone: document.getElementById('cust-phone').value || 'N/A',
+        items: [...currentItems],
+        total: document.getElementById('bill-total-amount').innerText
+      };
+
+      savedBills.unshift(billData);
+      localStorage.setItem('anwar_bills', JSON.stringify(savedBills));
+
+      alert('بل محفوظ کر لیا گیا ہے!');
+      currentItems = [];
+      document.getElementById('cust-name').value = '';
+      document.getElementById('cust-phone').value = '';
+      renderCurrentBill();
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('history-table-body');
+      tbody.innerHTML = '';
+      savedBills.forEach((bill, index) => {
+        tbody.innerHTML += `
+          <tr class="border-b border-slate-800/50 hover:bg-slate-800/30">
+            <td class="p-2.5 font-mono text-amber-500">${bill.id}</td>
+            <td class="p-2.5 text-slate-400">${bill.date}</td>
+            <td class="p-2.5">${bill.custName}</td>
+            <td class="p-2.5 text-right font-bold">${bill.total}</td>
+            <td class="p-2.5 text-center">
+              <button onclick="loadBillFromHistory(${index})" class="text-sky-400 hover:text-sky-300 text-xs">View/Load</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function searchBills() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const rows = document.getElementById('history-table-body').getElementsByTagName('tr');
+      Array.from(rows).forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    function loadBillFromHistory(index) {
+      const bill = savedBills[index];
+      currentItems = [...bill.items];
+      document.getElementById('cust-name').value = bill.custName;
+      document.getElementById('cust-phone').value = bill.phone;
+      switchTab('create');
+      renderCurrentBill();
+    }
+  </script>
 </body>
 </html>
